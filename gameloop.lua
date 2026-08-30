@@ -1,8 +1,15 @@
-function updatepause(dt)
+function updatepause(dt, state)
 
 end
 
+function drawpause(dt, state)
 
-function updategaming(dt)
+end
+
+function updategaming(dt, state)
+
+end
+
+function drawgaming(dt, state)
 
 end

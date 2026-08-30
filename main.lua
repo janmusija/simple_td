@@ -11,14 +11,18 @@ local state = {}
 --[[
     state[""] = "menu" (in menus), "pause" (paused), or "gaming" (playing the game). 
     state["menu"] = the screen of the menu. e.g. "main"
+    state["cursor"] = cursor position in menu (navigated with arrow keys by default)
+    state["menuentryflag"] = turned on when entering a new menu
 ]]--
 
 local test = 0
 
 function love.load() -- when game opens
-    state[""] = "gaming"
+    state[""] = "menu"
     state["menu"] = "main" 
-    love.window.setTitle( "okay now an actual 'game'" )
+    state["cursor"] = 1
+    state["menuentryflag"] = true
+    love.window.setTitle( "Menu Navigator 10000" )
 end
 
 function love.update(dt) -- dt = time to update last frame (thus expected time for this frame)
@@ -36,11 +40,16 @@ end
 
 function love.draw(dt) -- rendering
     local s = state[""]
-    love.graphics.setColor({1,0.6,0})
-    love.graphics.print(test, w/4, 3*h/4)
-    if s == "pause" then
+    --[[love.graphics.setColor(1,0.8,0)
+    love.graphics.print(test,w/4,3*h/4)]]
+    if s == "menu" then
+        drawmenu(dt,state)
+    elseif s == "gaming" then
+        drawgaming(dt,state)
+    elseif s == "pause" then
         love.graphics.setColor(0,0,0,0.2)
         love.graphics.rectangle("fill",0,0,w,h)
+        drawpause(dt,state)
     end
 end
 
@@ -67,14 +76,22 @@ local function isheld(x)
     end
 end
 
+
+local menutree = require("data/menu/tree")
+
 function love.keypressed(k)
     local s = state[""]
     if s == "pause" then
         -- keybinds when paused
-        if iskey(k,"pause") then state[""] = "gaming"
-        test = test + 1 end
+        if iskey(k,"pause") then state[""] = "gaming" end
     elseif s == "menu" then
         -- keybinds when in menu
+        if iskey(k,"menuup") then state["cursor"] = state["cursor"] - 1 end
+        if iskey(k,"menudown") then state["cursor"] = state["cursor"] + 1 end
+        if iskey(k,"menuselect") and menutree[state["menu"]][state["cursor"]] then state["menu"] = menutree[state["menu"]][state["cursor"]]
+            state["menuentryflag"] = true end
+        if iskey(k,"menuquit") then state["menu"] = "quit"
+            state["menuentryflag"] = true end
     elseif s == "gaming" then
         -- keybinds while in-game.
         if iskey(k,"pause") then state[""] = "pause" end
