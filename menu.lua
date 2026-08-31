@@ -1,5 +1,5 @@
-font36 = love.graphics.newFont(36)
-font18 = love.graphics.newFont(18)
+local font36 = love.graphics.newFont(36)
+local font18 = love.graphics.newFont(18)
 local w, h = love.graphics.getDimensions()
 
 local menunames = require("data/menu/menunames")

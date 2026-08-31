@@ -32,6 +32,7 @@ local function locate_level_file(id)
 end
 
 local sl = require("save_load")
+local e_c_t = require("data/enemy/enemy_class_table")
 
 local function initialize_level (state,id)
     state.leveldata = nil -- destroy any potentially existing data about other levels.
@@ -47,14 +48,22 @@ local function initialize_level (state,id)
     if state.leveldata.enemy_modifiers == nil then state.leveldata.enemy_modifiers = {} end
     for k, v in pairs(state.leveldata.enemies) do
         if state.leveldata.enemy_weights[k] == nil then
-            state.leveldata.enemy_weights[k] = 1 -- TODO: set these to default weights
+            if (e_c_t[k] ~= nil) and (e_c_t[k].weight ~= nil) then
+                state.leveldata.enemy_weights[k] = e_c_t[k].weight
+            else
+            state.leveldata.enemy_weights[k] = 1
+            end
         end
         if state.leveldata.enemy_wavepoints[k] == nil then
-            state.leveldata.enemy_wavepoints[k] = 1 -- TODO: set these to default wavepoints
+            if (e_c_t[k] ~= nil) and (e_c_t[k].wavepoints ~= nil) then
+                state.leveldata.enemy_wavepoints[k] = e_c_t[k].wavepoints
+            else
+            state.leveldata.enemy_wavepoints[k] = 200
+            end
         end
     end
-
-    -- other level initialization details. define sensible defaults here for wave scaling etc
+    if state.leveldata.length == nil then state.leveldata.length = 9 end
+    if state.leveldata.breadth == nil then state.leveldata.length = 5 end
 end
 
 return initialize_level

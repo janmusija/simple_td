@@ -1,14 +1,18 @@
 local Enemy = require("data/enemy/enemy")
 
+local Matryoshka = Enemy:extend()
+
 function Matryoshka:new(state,y,size)
     Matryoshka.super.new(self,state,y) -- common enemy initialization
     self.sprite = love.graphics.newImage("sprite/enemy/matryoshka.png")
     self.size = size or 2
     self.speed = 0.1 + (0.3/math.max((size+2/3),1))
     self.hp = self.size * 10
-    self.alive = true
     self.stunframes = 0
 end
+
+Matryoshka.wavepoints = 4
+Matryoshka.weight = 1
 
 function Matryoshka:destroy(state)
     -- [create a new matryoshka]

@@ -32,6 +32,9 @@ local state = {
         initial_wavepoints -> wavepoints in beginning of level
         wavepoint_scaling -> either a numeric value (constant number of wavepoints added per wave) or a function which maps wave number to wavepoints in that wave (in which case "initial_wavepoints" is ignored)
         waves -> number of waves
+        length -> length of board (default 9)
+        breadth -> breadth of board (default 5)
+        map -> layout of board (more details later). default to just regular tiles
 
         --]]
     },

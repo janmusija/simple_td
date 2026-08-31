@@ -10,5 +10,8 @@ return {
     campaign1 = "Main Campaign",
     campaign2 = "NG+",
     campaign3 = "NG++",
-    campaign4 = "The Scuffed Campaign"
+    campaign4 = "The Scuffed Campaign",
+
+    -- levels
+    c1w1l1 = "Beginnings"
 }

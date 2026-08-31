@@ -1,7 +1,7 @@
 local Object = require("classic")
 
 Enemy = Object:extend()
---[[ members:
+--[[ members of instances:
 .alive -> flag for enemies that are currently alive. dead enemies no longer exist and will be destroyed.
 .hp -> health
 .y -> which row it is in
@@ -9,8 +9,6 @@ Enemy = Object:extend()
 .speed -> tiles traveled per 60 frames.
 .sprite -> image for this enemy
 .block_stall_time -> if blocked, frames before un-blocking.
-.wavepoints -> how much of the wavepoint "budget" is occupied by this enemy, by default
-.weight -> how likely it is to spawn, by default
 
 :new -> create new enemy
 :destroy -> actions to perform when destroyed (e.g. matryoshkas spawn further, smaller matryoshkas)
@@ -18,6 +16,11 @@ Enemy = Object:extend()
 :update -> update per frame.
 :draw -> depict it
 :moveforward -> move by speed/60 spaces (called by update, thus per frame)
+]]
+
+--[[ members of class itself:
+.wavepoints -> how much of the wavepoint "budget" is occupied by this enemy, by default
+.weight -> how likely it is to spawn, by default
 ]]
 
 function Enemy:new(state,y)
@@ -28,9 +31,11 @@ function Enemy:new(state,y)
     self.speed = 0.40
     self.hp = 20
     self.alive = true
-    self.wavepoints = 2
-    self.weight = 2
+    if (y == -1) then self.alive = false end -- dummy
 end
+
+Enemy.wavepoints = 2
+Enemy.weight = 2
 
 function Enemy:damage(state,dmg)
     self.hp = self.hp - dmg
