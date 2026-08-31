@@ -55,7 +55,6 @@ local function initialize_level (state,id)
     end
     if state.leveldata.enemy_weights == nil then state.leveldata.enemy_weights = {} end
     if state.leveldata.enemy_wavepoints == nil then state.leveldata.enemy_wavepoints = {} end
-    --if state.leveldata.enemy_modifiers == nil then state.leveldata.enemy_modifiers = {} end -- deprecatED this.
     for k, v in pairs(state.leveldata.enemies) do
         if state.leveldata.enemy_weights[k] == nil then
             if (e_c_t.get(k).weight ~= nil) then
