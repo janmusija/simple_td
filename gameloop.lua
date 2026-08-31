@@ -24,7 +24,6 @@ local function get_enemy(state,budget)
     local thresholds = {}
     local i = 1
     for k,v in pairs(state.leveldata.enemy_weights) do
-        --print("enemy: " .. k, "budget: " .. budget)
         if state.leveldata.enemy_wavepoints[k] <= budget then
             totalweight = totalweight + v
             thresholds[i] = {w = totalweight, e = k}
@@ -36,8 +35,8 @@ local function get_enemy(state,budget)
     for j,v in ipairs(thresholds) do
         if random_int < v.w then
             out = v.e
+            break
         end
-        break
     end
     return out
 end
@@ -90,9 +89,8 @@ function updategaming(state)
                 local lane = -1
                 lane = math.random(1,state.leveldata.breadth)
 
-                print("Spawn " .. enid .. " at " .. lane .. " (now `cube` is normal. for contrast.)") -- TEMP
+                print("Spawn " .. enid .. " at " .. lane) -- TEMP
                 local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
-                print("Size: " .. (a.size or "nil"))
 
                 state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
             else 
