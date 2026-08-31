@@ -33,5 +33,4 @@ end
 
 return function(LEVEL_DATA_CONTAINER,id)
     local location = locate_level_file(id)
-    print(location) -- temp, for demo purposes
 end

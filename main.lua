@@ -27,10 +27,6 @@ local test = 0
 
 function love.load() -- when game opens
     love.window.setTitle( "Menu Navigator 10000" )
-    load_level("","c193w1938l1378") -- attempt to load level 1378 of world 1938 of campaign 193. this does nothing yet because "loading a level" just prints what the expected path to that level is
-    load_level("","c1w1") -- this is not formatted properly to be recognized as indicating a path
-    load_level("","cwl3") -- nor is this
-    load_level("","campaign1w1l1") -- nor is this
 end
 
 function love.update(dt) -- dt = time to update last frame (thus expected time for this frame)
