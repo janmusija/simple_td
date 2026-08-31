@@ -8,6 +8,8 @@ local sl = require("save_load")
 
 local load_level = require("data/load_level_from_disk")
 
+local locked = require("data/menu/locked")
+
 local w, h = love.graphics.getDimensions()
 local font = love.graphics.getFont()
 local DEFAULT_FILE_NAME = "default"
@@ -23,7 +25,11 @@ local state = {
     },
     playerdata = { -- data about the player
         yen = 0,
-        completed_levels = {}
+        completed_levels = {
+            c1w1l1 = true, -- unlocks c1w1l2
+            c1w1l10 = true, -- unlocks c1world2
+            c1w5l10 = true -- unlocks campaign2
+        }
     }
 }
 
@@ -31,6 +37,7 @@ local test = 0
 
 function love.load() -- when game opens
     love.window.setTitle( "Menu Navigator 10000" )
+    locked.runThisInMainToAccessRelevantParameters_ThereIsProbablyABetterWayToDoThis(state)
     if io.open("save/" .. DEFAULT_FILE_NAME .. ".json", "r") then sl.load_player_data(DEFAULT_FILE_NAME,state) end
 end
 

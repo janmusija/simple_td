@@ -38,8 +38,6 @@ local function add_many_children(parentnode,childname,count,backname)
     end
 end
 
-function TEMP_PERMALOCK() return false end
-
 -- campaigns
 add_many_children("campaigns","campaign",4,"main")
 
@@ -56,21 +54,6 @@ for i = 1,4 do
         for k = 2,10 do
         end
     end
-end
-
--- gate levels, worlds, etc
-for i = 1,4 do
-    for j = 1,5 do
-        for k = 2,10 do
-            locked.register_lock("c" .. i .. "w" .. j .. "l" .. k, TEMP_PERMALOCK)
-        end
-    end
-    for j = 2,5 do
-        locked.register_lock("c" .. i .. "world" .. j, TEMP_PERMALOCK)
-    end
-end
-for i = 2,4 do
-    locked.register_lock("campaign" .. i, TEMP_PERMALOCK)
 end
 
 return tree
