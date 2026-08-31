@@ -4,13 +4,15 @@ local gameloop = require("gameloop")
 local menu = require("menu")
 local Object = require("classic") -- https://github.com/rxi/classic/blob/master/classic.lua
 local Button = require("ui/button")
-local save_player_data, load_player_data = require("save_load")
+local sl = require("save_load")
 
 local load_level = require("data/load_level_from_disk")
 
 local w, h = love.graphics.getDimensions()
 local font = love.graphics.getFont()
+local DEFAULT_FILE_NAME = "default"
 local state = {
+    profile = DEFAULT_FILE_NAME,
     [""] = "menu", -- (can be "menu" in menus, "pause" when paused, or "gaming" when playing the game)
     menu = "main", -- the screen of the menu
     cursor = 1, -- cursor position in menu (navigated  with arrow keys)
@@ -28,6 +30,7 @@ local test = 0
 
 function love.load() -- when game opens
     love.window.setTitle( "Menu Navigator 10000" )
+    if io.open("save/" .. DEFAULT_FILE_NAME .. ".json", "r") then sl.load_player_data(DEFAULT_FILE_NAME,state) end
 end
 
 function love.update()

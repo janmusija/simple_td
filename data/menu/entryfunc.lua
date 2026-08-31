@@ -1,10 +1,10 @@
 local load_level = require("data/load_level_from_disk")
 
-local save_player_data, load_player_data = require("save_load")
+local sl = require("save_load")
 
 funcs = {
     quityes = function(state)
-        save_player_data("default",state)
+        sl.save_player_data(state.profile,state)
         love.event.quit()
     end,
     quitnosave = function(state)
