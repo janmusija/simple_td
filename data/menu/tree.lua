@@ -7,7 +7,8 @@ tree = {
     main = {
         [1] = "campaigns",
         [2] = "shop",
-        [3] = "quit"
+        [3] = "quit",
+        [4] = "test_level"
     },
     shop = {
         [1] = "main"

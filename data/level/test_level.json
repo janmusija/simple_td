@@ -1,0 +1,8 @@
+{
+  "enemies": {"cube": true, "matryoshka3": true},
+  "initial_wavepoints": 3,
+  "wavepoint_scaling": 2,
+  "waves": 60,
+  "initial_mana": 40,
+  "breadth": 5
+}

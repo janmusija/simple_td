@@ -25,4 +25,11 @@ for i = 1,3 do
     end
 end
 
+funcs["test_level"] = function(state)
+    print("test")
+    state["level"] = "test_level"
+    state[""] = "gaming"
+    load_level(state,"test_level")
+end
+
 return funcs
