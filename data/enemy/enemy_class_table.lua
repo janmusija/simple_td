@@ -29,14 +29,14 @@ end
 
 
 e_c_t.table = {
-    cubeh = Cube,
+    cube = Cube,
     matryoshka = Matryoshka,
 
 
     -- duplicates-- which can therefore have alternate modifiers, weights, etc...
     also_cube = Cube,
     third_cube = Cube,
-    cube = {__typ = Matryoshka, size = 3},
+    matryoshka3 = {__typ = Matryoshka, size = 3},
     matryoshka4 = {__typ = Matryoshka, size = 4}
 }
 

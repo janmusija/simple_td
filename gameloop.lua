@@ -90,9 +90,9 @@ function updategaming(state)
                 local lane = -1
                 lane = math.random(1,state.leveldata.breadth)
 
-                print("Spawn " .. enid .. " at " .. lane .. " (note: currently `cube` is matryoshka3, for test reasons)") -- TEMP
+                print("Spawn " .. enid .. " at " .. lane .. " (now `cube` is normal. for contrast.)") -- TEMP
                 local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
-                print("Size: " .. a.size)
+                print("Size: " .. (a.size or "nil"))
 
                 state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
             else 
