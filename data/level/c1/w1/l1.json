@@ -1,5 +1,5 @@
 {
-  "enemies": {"cube": true, "matryoshka": true, "god": true},
+  "enemies": {"cube": true},
   "initial_wavepoints": 2,
   "wavepoint_scaling": 1,
   "waves": 6,
