@@ -12,6 +12,7 @@ tree = {
     },
     quit = {
         [2] = "quityes",
+        [3] = "quitnosave",
         [1] = "main"
     }
 }

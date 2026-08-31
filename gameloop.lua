@@ -1,10 +1,10 @@
 local w, h = love.graphics.getDimensions()
 
-function updatepause(dt, state)
+function updatepause(state)
 
 end
 
-function drawpause(dt, state)
+function drawpause(state)
     love.graphics.print("omg! gaming")
 
     -- probably this basically entails running drawgaming but with this over it
@@ -13,10 +13,10 @@ function drawpause(dt, state)
     love.graphics.rectangle("fill",0,0,w,h)
 end
 
-function updategaming(dt, state)
+function updategaming(state)
 
 end
 
-function drawgaming(dt, state)
+function drawgaming(state)
     love.graphics.print("omg! gaming")
 end

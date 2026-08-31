@@ -6,7 +6,7 @@ local menunames = require("data/menu/menunames")
 local tree = require("data/menu/tree")
 local entryfuncs = require("data/menu/entryfunc")
 
-function updatemenu(dt, state)
+function updatemenu(state)
     if (not tree[state["menu"]]) and state["menu"] != "dummy" then tree[state["menu"]] = {[1] = "dummy"} end
     if not tree[state["menu"]][state["cursor"]] then
         state["cursor"] = 1
@@ -19,7 +19,7 @@ function updatemenu(dt, state)
     end
 end
 
-function drawmenu(dt, state)
+function drawmenu(state)
     love.graphics.setColor({1,1,1})
     love.graphics.setFont(font36)
     love.graphics.print(menunames[state["menu"]] or state["menu"],0,0)

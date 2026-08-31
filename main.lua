@@ -4,6 +4,7 @@ local gameloop = require("gameloop")
 local menu = require("menu")
 local Object = require("classic") -- https://github.com/rxi/classic/blob/master/classic.lua
 local Button = require("ui/button")
+local save_player_data, load_player_data = require("save_load")
 
 local load_level = require("data/load_level_from_disk")
 
@@ -19,7 +20,7 @@ local state = {
         phase = "select" -- select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
     },
     playerdata = { -- data about the player
-
+        test = true
     }
 }
 
@@ -29,29 +30,29 @@ function love.load() -- when game opens
     love.window.setTitle( "Menu Navigator 10000" )
 end
 
-function love.update(dt) -- dt = time to update last frame (thus expected time for this frame)
+function love.update()
     local s = state[""]
 	if s == "menu" then
-        updatemenu(dt, state)
+        updatemenu(state)
     elseif s == "pause" then
-        updatepause(dt,state)
+        updatepause(state)
     elseif s == "gaming" then
-        updategaming(dt,state)
+        updategaming(state)
     else 
     -- damage control
     end
 end
 
-function love.draw(dt) -- rendering
+function love.draw()
     local s = state[""]
     --[[love.graphics.setColor(1,0.8,0)
     love.graphics.print(test,w/4,3*h/4)]]
     if s == "menu" then
-        drawmenu(dt,state)
+        drawmenu(state)
     elseif s == "gaming" then
-        drawgaming(dt,state)
+        drawgaming(state)
     elseif s == "pause" then
-        drawpause(dt,state)
+        drawpause(state)
     end
 end
 
