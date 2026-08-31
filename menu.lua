@@ -6,6 +6,7 @@ local tree = require("data/menu/tree")
 local entryfuncs = require("data/menu/entryfunc")
 
 function updatemenu(dt, state)
+    if (not tree[state["menu"]]) and state["menu"] != "dummy" then tree[state["menu"]] = {[1] = "dummy"} end
     if not tree[state["menu"]][state["cursor"]] then
         state["cursor"] = 1
     end

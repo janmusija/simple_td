@@ -88,8 +88,11 @@ function love.keypressed(k)
         -- keybinds when in menu
         if iskey(k,"menuup") then state["cursor"] = state["cursor"] - 1 end
         if iskey(k,"menudown") then state["cursor"] = state["cursor"] + 1 end
-        if iskey(k,"menuselect") and menutree[state["menu"]][state["cursor"]] then state["menu"] = menutree[state["menu"]][state["cursor"]]
-            state["menuentryflag"] = true end
+        if iskey(k,"menuselect") and menutree[state["menu"]][state["cursor"]] then
+            -- TODO: implement locked menus (so that you can't, like, enter levels illegally.)
+            state["menu"] = menutree[state["menu"]][state["cursor"]]
+            state["menuentryflag"] = true
+            state["cursor"] = 1 end
         if iskey(k,"menuquit") then state["menu"] = "quit"
             state["menuentryflag"] = true end
     elseif s == "gaming" then
