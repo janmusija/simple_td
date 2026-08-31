@@ -22,7 +22,8 @@ local state = {
         phase = "select" -- select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
     },
     playerdata = { -- data about the player
-        yen = 0
+        yen = 0,
+        completed_levels = {}
     }
 }
 
@@ -94,7 +95,7 @@ function love.keypressed(k)
         -- keybinds when in menu
         if iskey(k,"menuup") then state["cursor"] = state["cursor"] - 1 end
         if iskey(k,"menudown") then state["cursor"] = state["cursor"] + 1 end
-        if iskey(k,"menuselect") and menutree[state["menu"]][state["cursor"]] then
+        if iskey(k,"menuselect") and menutree[state["menu"]][state["cursor"]] and not menu_locked(menutree[state["menu"]][state["cursor"]],state) then
             -- TODO: implement locked menus (so that you can't, like, enter levels illegally.)
             state["menu"] = menutree[state["menu"]][state["cursor"]]
             state["menuentryflag"] = true

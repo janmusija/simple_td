@@ -5,6 +5,14 @@ local w, h = love.graphics.getDimensions()
 local menunames = require("data/menu/menunames")
 local tree = require("data/menu/tree")
 local entryfuncs = require("data/menu/entryfunc")
+local locked = require("data/menu/locked")
+
+
+function menu_locked(name,state)
+    if locked.locks[name] and not locked.locks[name](state) then return true
+    else return false
+    end
+end
 
 function updatemenu(state)
     if (not tree[state["menu"]]) and state["menu"] != "dummy" then tree[state["menu"]] = {[1] = "dummy"} end
@@ -27,7 +35,13 @@ function drawmenu(state)
     i = 1
     while tree[state["menu"]][i] do
         menuid = tree[state["menu"]][i]
-        if i == state["cursor"] then
+        if menu_locked(menuid,state) then
+            love.graphics.setColor({0.6,0.1,0.1})
+            if i == state["cursor"] then
+            love.graphics.print(">",0,72+i*36)
+            end
+            love.graphics.print((menunames[menuid] or menuid) .. " (LOCKED)",36,72+i*36)
+        elseif i == state["cursor"] then
             love.graphics.setColor({1,1,1})
             love.graphics.print(">",0,72+i*36)
             love.graphics.print(menunames[menuid] or menuid,36,72+i*36)
@@ -37,4 +51,6 @@ function drawmenu(state)
         end
         i = i+1
     end
+
+    -- special cases
 end
