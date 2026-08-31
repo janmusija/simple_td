@@ -99,6 +99,7 @@ function love.keypressed(k)
         if iskey(k,"menuquit") then state["menu"] = "quit"
             state["menuentryflag"] = true end
     elseif s == "gaming" then
+        if iskey(k,"menuselect") and state.leveldata.phase == "select" then state.leveldata.phase = "play" end
         -- keybinds while in-game.
         if iskey(k,"pause") then state[""] = "pause" end
     end

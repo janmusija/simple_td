@@ -3,7 +3,7 @@
 return {
     keybinds = {
         pause = "space", -- pause the game
-        menuselect = "return", -- select an option in menu
+        menuselect = "return", -- select an option in menu or start a level
         menuup = "up", -- go up menu
         menudown = "down", -- go down menu
         menuquit = "escape" -- go to quit the game
