@@ -25,11 +25,7 @@ local state = {
     },
     playerdata = { -- data about the player
         yen = 0,
-        completed_levels = {
-            c1w1l1 = true, -- unlocks c1w1l2
-            c1w1l10 = true, -- unlocks c1world2
-            c1w5l10 = true -- unlocks campaign2
-        }
+        completed_levels = {}
     }
 }
 

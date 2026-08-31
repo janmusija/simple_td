@@ -7,14 +7,14 @@ local locked = {
     end
 }
 
-function LOCK_BY_LEVEL(menu_id,unlock_level,state)
+local function LOCK_BY_LEVEL(menu_id,unlock_level,state)
     locked.register_lock(menu_id, function()
         return state.playerdata.completed_levels[unlock_level] == true
     end
     )
 end
 
-function PERMALOCK(menu_id,unlock_level)
+local function PERMALOCK(menu_id,unlock_level)
     locked.register_lock(menu_id, function() return false end)
 end
 
