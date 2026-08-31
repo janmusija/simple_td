@@ -19,7 +19,7 @@ for i = 1,3 do
             funcs[lname] = function(state)
                 state["level"] = lname
                 state[""] = "gaming"
-                load_level(state["leveldata"],lname)
+                load_level(state,lname)
             end
         end
     end

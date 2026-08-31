@@ -7,7 +7,9 @@ Tower = Object:extend()
 .y -> which row it is in
 .x -> position (smaller number -> closer to where enemies spawn)
 .speed -> tiles traveled per 60 frames.
-.sprite = image for this enemy
+.sprite -> image for this tower
+.manacost -> cost
+.recharge -> time to recharge the tower (in 60-frame units)
 
 :new -> create new tower
 :destroy -> actions to perform when destroyed
@@ -23,6 +25,8 @@ function Tower:new(state,x,y)
     self.x = x
     self.hp = 20
     self.alive = true
+    self.manacost = 0
+    self.recharge = 5
 end
 
 
