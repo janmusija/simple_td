@@ -16,4 +16,11 @@ function sl.load_player_data(filename,state)
     state["playerdata"] = json.decode(savestring)
 end
 
+function sl.read_level_data(filename,state)
+    local f = assert(io.open("data/level/" .. filename .. ".json", "r"))
+    local levelstring = f:read("*all")
+    f:close()
+    state.leveldata = json.decode(levelstring)
+end
+
 return sl

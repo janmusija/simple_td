@@ -31,7 +31,14 @@ local function locate_level_file(id)
     return id
 end
 
-return function(LEVEL_DATA_CONTAINER,id)
+local sl = require("save_load")
+
+local function initialize_level (LEVEL_DATA_CONTAINER,id,state)
     local location = locate_level_file(id)
-    -- TK
+    sl.read_level_data(location,state)
+    state.leveldata.phase = "select"
+
+    -- other level initialization details
 end
+
+return initialize_level
