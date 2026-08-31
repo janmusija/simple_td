@@ -34,11 +34,27 @@ end
 local sl = require("save_load")
 
 local function initialize_level (LEVEL_DATA_CONTAINER,id,state)
+    state.leveldata = nil -- destroy any potentially existing data about other levels.
     local location = locate_level_file(id)
     sl.read_level_data(location,state)
     state.leveldata.phase = "select"
+    if state.leveldata.enemies == nil then
+        print ("Error: no enemies in this level!")
+        state.leveldata.enemies = {cube = true}
+    end
+    if state.leveldata.enemy_weights == nil then state.leveldata.enemy_weights = {}
+    if state.leveldata.enemy_wavepoints == nil then state.leveldata.enemy_wavepoints = {}
+    if state.leveldata.enemy_modifiers == nil then state.leveldata.enemy_modifiers = {}
+    for k, v in pairs(leveldata.enemy)
+        if state.leveldata.enemy_weights[k] == nil then
+            state.leveldata.enemy_weights[k] = 1 -- TODO: set these to default weights
+        end
+        if state.leveldata.enemy_wavepoints[k] == nil then
+            state.leveldata.enemy_wavepoints[k] = 1 -- TODO: set these to default wavepoints
+        end
+    end
 
-    -- other level initialization details
+    -- other level initialization details. define sensible defaults here for wave scaling etc
 end
 
 return initialize_level

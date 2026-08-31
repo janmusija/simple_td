@@ -9,7 +9,8 @@ Enemy = Object:extend()
 .speed -> tiles traveled per 60 frames.
 .sprite -> image for this enemy
 .block_stall_time -> if blocked, frames before un-blocking.
-.wavepoints -> how much of the wavepoint "budget" occupied by this enemy
+.wavepoints -> how much of the wavepoint "budget" is occupied by this enemy, by default
+.weight -> how likely it is to spawn, by default
 
 :new -> create new enemy
 :destroy -> actions to perform when destroyed (e.g. matryoshkas spawn further, smaller matryoshkas)
@@ -28,6 +29,7 @@ function Enemy:new(state,y)
     self.hp = 20
     self.alive = true
     self.wavepoints = 2
+    self.weight = 2
 end
 
 function Enemy:damage(state,dmg)

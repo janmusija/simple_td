@@ -1,1 +1,7 @@
-{"enemyweights":{"cube":1}}
+{
+  "enemies": {"cube": true},
+  "initial_wavepoints": 2,
+  "wavepoint_scaling": 1,
+  "waves": 6,
+  "initial_mana": 40
+}
