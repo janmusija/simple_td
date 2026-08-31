@@ -33,8 +33,8 @@ local test = 0
 
 function love.load() -- when game opens
     love.window.setTitle( "Menu Navigator 10000" )
-    locked.runThisInMainToAccessRelevantParameters_ThereIsProbablyABetterWayToDoThis(state)
     if io.open("save/" .. DEFAULT_FILE_NAME .. ".json", "r") then sl.load_player_data(DEFAULT_FILE_NAME,state) end
+    locked.updateLocks(state)
 end
 
 function love.update()
@@ -98,11 +98,12 @@ function love.keypressed(k)
         -- keybinds when in menu
         if iskey(k,"menuup") then state["cursor"] = state["cursor"] - 1 end
         if iskey(k,"menudown") then state["cursor"] = state["cursor"] + 1 end
-        if iskey(k,"menuselect") and menutree[state["menu"]][state["cursor"]] and not menu_locked(menutree[state["menu"]][state["cursor"]],state) then
-            -- TODO: implement locked menus (so that you can't, like, enter levels illegally.)
+        if iskey(k,"menuselect") and menutree[state["menu"]][state["cursor"]] and locked.unlocked(menutree[state["menu"]][state["cursor"]]) then
             state["menu"] = menutree[state["menu"]][state["cursor"]]
             state["menuentryflag"] = true
-            state["cursor"] = 1 end
+            state["cursor"] = 1
+            locked.updateLocks(state) -- likely overzealous
+        end
         if iskey(k,"menuquit") then state["menu"] = "quit"
             state["menuentryflag"] = true end
     elseif s == "gaming" then

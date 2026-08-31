@@ -7,13 +7,6 @@ local tree = require("data/menu/tree")
 local entryfuncs = require("data/menu/entryfunc")
 local locked = require("data/menu/locked")
 
-
-function menu_locked(name,state)
-    if locked.locks[name] and not locked.locks[name](state) then return true
-    else return false
-    end
-end
-
 function updatemenu(state)
     if (not tree[state["menu"]]) and state["menu"] != "dummy" then tree[state["menu"]] = {[1] = "dummy"} end
     if not tree[state["menu"]][state["cursor"]] then
@@ -35,7 +28,7 @@ function drawmenu(state)
     i = 1
     while tree[state["menu"]][i] do
         menuid = tree[state["menu"]][i]
-        if menu_locked(menuid,state) then
+        if not locked.unlocked(menuid) then
             love.graphics.setColor({0.6,0.1,0.1})
             if i == state["cursor"] then
             love.graphics.print(">",0,72+i*36)

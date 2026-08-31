@@ -1,26 +1,29 @@
 -- conditions for locking / unlocking menu items
 
 local locked = {
-    locks = {},
+    locks = {}, -- locked = true, unlocked = nil
 }
 
-locked.register_lock = function(menu_id,unlock_condition)
-    locked.locks[menu_id] = unlock_condition
+locked.unlocked = function (id)
+    if locked.locks[id] == nil or locked.locks[id] == false then return true
+    elseif locked.locks[id] == true then return false
+    end
 end
 
 locked.LOCK_BY_LEVEL = function (menu_id,unlock_level,state)
-    locked.register_lock(menu_id, function()
-        return state.playerdata.completed_levels[unlock_level] == true
+    if state.playerdata.completed_levels[unlock_level] then
+        locked.locks[menu_id] = nil
+    else 
+        locked.locks[menu_id] = true
     end
-    )
 end
 
 locked.PERMALOCK = function(menu_id,unlock_level)
-    locked.register_lock(menu_id, function() return false end)
+    locked.locks[menu_id] = true
 end
 
--- gate levels, worlds, etc
-locked.runThisInMainToAccessRelevantParameters_ThereIsProbablyABetterWayToDoThis = function (state)
+-- update whether levels, worlds, etc are locked. previously I had some insane system that stored individual functions that would check these things individually every time you rendered a menu.
+locked.updateLocks = function (state)
     for i = 1,4 do
         for j = 1,5 do
             for k = 1,9 do
@@ -33,7 +36,7 @@ locked.runThisInMainToAccessRelevantParameters_ThereIsProbablyABetterWayToDoThis
     end
     locked.LOCK_BY_LEVEL("campaign2", "c1w5l10",state)
     locked.LOCK_BY_LEVEL("campaign3", "c2w5l10",state)
-    locked.LOCK_BY_LEVEL("campaign4", "c2w5l10",state) -- yes, 2.
+    locked.LOCK_BY_LEVEL("campaign4", "c2w5l10",state) -- (yes, 2.)
 end
 
 
