@@ -34,11 +34,19 @@ end
 local sl = require("save_load")
 local e_c_t = require("data/enemy/enemy_class_table")
 
+local function int_from_string_bad(str)
+    local out = 0
+    for i = 1,string.len(str) do
+        out = out ~ bit.ror(string.byte(str,i),3*i)
+        --print(string.byte(str,i), out)
+    end
+    return out
+end
+
 local function initialize_level (state,id)
     state.leveldata = nil -- destroy any potentially existing data about other levels.
     local location = locate_level_file(id)
     sl.read_level_data(location,state)
-    state.leveldata.phase = "select"
     if state.leveldata.enemies == nil then
         print ("Error: no enemies in this level!")
         state.leveldata.enemies = {cube = true}
@@ -61,9 +69,30 @@ local function initialize_level (state,id)
             state.leveldata.enemy_wavepoints[k] = 200
             end
         end
+        if state.leveldata.__minwp == nil or state.leveldata.enemy_wavepoints[k] < state.leveldata.__minwp then
+            state.leveldata.__minwp = state.leveldata.enemy_wavepoints[k]
+        end
     end
     if state.leveldata.length == nil then state.leveldata.length = 9 end
     if state.leveldata.breadth == nil then state.leveldata.length = 5 end
+
+    -- initialize level data
+    state.leveldata.phase = "select"
+    state.leveldata.wave = 0
+    state.leveldata.wavetimer = 0
+    state.leveldata.budget = 0
+    state.leveldata.timer = 0
+
+    state.leveldata.CHOSEN_TOWERS = {}
+    state.leveldata.ENEMY_ARRAY = {}
+    state.leveldata.TOWER_ARRAY = {}
+
+    -- initialize level rng (seeded by game seed, levelid, and player yen)
+    local seed = state.playerdata.seed
+    seed = seed ~ state.playerdata.yen
+    seed = seed ~ int_from_string_bad(id)
+    --print(seed)
+    math.randomseed(seed)
 end
 
 return initialize_level

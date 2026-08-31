@@ -22,7 +22,16 @@ local state = {
     level = 0, -- what level is being played. 0 when not in use
     leveldata = { -- data about current level
         --[[
-        phase -> select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
+        phase -> "select" to select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
+        wave -> current wave
+        wavetimer -> time (frames) in this wave
+        timer -> current time (frames) in this level
+        budget -> remaining budget for this wave
+
+        ENEMY_ARRAY -> collection of currently extant enemies
+        CHOSEN_TOWERS -> collection of towers
+        TOWER_ARRAY -> collection of currently extant towers
+        MANA = current player mana
 
         enemies -> set of enemies that appear in this level
         enemy_weights (optional, defaults per-enemy) -> weights of enemies-- how likely they are to spawn when the budget allows them. 
@@ -36,9 +45,16 @@ local state = {
         breadth -> breadth of board (default 5)
         map -> layout of board (more details later). default to just regular tiles
 
+        __minwp -> smallest wavepoints among any enemy in this level
+
         --]]
     },
-    playerdata = { -- data about the player
+    playerdata = { -- data about the player.
+    --[[
+    yen -> money
+    completed_levels -> self explanatory
+    seed -> seed of this run
+    ]]
         yen = 0,
         completed_levels = {}
     }
@@ -48,20 +64,30 @@ local test = 0
 
 function love.load() -- when game opens
     love.window.setTitle( "Menu Navigator 10000" )
+    math.randomseed(os.time())
+    local seed = math.random(0,16777215)
+    state.playerdata.seed = seed
     if io.open("save/" .. DEFAULT_FILE_NAME .. ".json", "r") then sl.load_player_data(DEFAULT_FILE_NAME,state) end
     locked.updateLocks(state)
 end
 
-function love.update()
-    local s = state[""]
-	if s == "menu" then
-        updatemenu(state)
-    elseif s == "pause" then
-        updatepause(state)
-    elseif s == "gaming" then
-        updategaming(state)
-    else 
-    -- damage control
+local accumulator = 0.0
+local MAX_FPS = 60
+local spf = 1/MAX_FPS
+function love.update(dt)
+    accumulator = accumulator + dt
+    if accumulator >= spf then 
+        local s = state[""]
+        if s == "menu" then
+            updatemenu(state)
+        elseif s == "pause" then
+            updatepause(state)
+        elseif s == "gaming" then
+            updategaming(state)
+        else 
+        -- damage control
+        end
+        accumulator = accumulator - spf
     end
 end
 

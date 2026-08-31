@@ -26,7 +26,7 @@ function drawmenu(state)
     love.graphics.print(menunames[state["menu"]] or state["menu"],0,0)
     love.graphics.setFont(font18)
     i = 1
-    while tree[state["menu"]][i] do
+    while tree[state["menu"]] and tree[state["menu"]][i] do
         menuid = tree[state["menu"]][i]
         if not locked.unlocked(menuid) then
             love.graphics.setColor({0.6,0.1,0.1})
