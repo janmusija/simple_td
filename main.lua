@@ -22,7 +22,7 @@ local state = {
         phase = "select" -- select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
     },
     playerdata = { -- data about the player
-        test = true
+        yen = 0
     }
 }
 
