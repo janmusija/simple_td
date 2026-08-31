@@ -43,6 +43,8 @@ local function int_from_string_bad(str)
     return out
 end
 
+local array = require("array")
+
 local function initialize_level (state,id)
     state.leveldata = nil -- destroy any potentially existing data about other levels.
     local location = locate_level_file(id)
@@ -53,18 +55,18 @@ local function initialize_level (state,id)
     end
     if state.leveldata.enemy_weights == nil then state.leveldata.enemy_weights = {} end
     if state.leveldata.enemy_wavepoints == nil then state.leveldata.enemy_wavepoints = {} end
-    if state.leveldata.enemy_modifiers == nil then state.leveldata.enemy_modifiers = {} end
+    --if state.leveldata.enemy_modifiers == nil then state.leveldata.enemy_modifiers = {} end -- deprecating this
     for k, v in pairs(state.leveldata.enemies) do
         if state.leveldata.enemy_weights[k] == nil then
-            if (e_c_t[k] ~= nil) and (e_c_t[k].weight ~= nil) then
-                state.leveldata.enemy_weights[k] = e_c_t[k].weight
+            if (e_c_t.get(k).weight ~= nil) then
+                state.leveldata.enemy_weights[k] = e_c_t.get(k).weight
             else
             state.leveldata.enemy_weights[k] = 1
             end
         end
         if state.leveldata.enemy_wavepoints[k] == nil then
-            if (e_c_t[k] ~= nil) and (e_c_t[k].wavepoints ~= nil) then
-                state.leveldata.enemy_wavepoints[k] = e_c_t[k].wavepoints
+            if (e_c_t.get(k).wavepoints ~= nil) then
+                state.leveldata.enemy_wavepoints[k] = e_c_t.get(k).wavepoints
             else
             state.leveldata.enemy_wavepoints[k] = 200
             end
@@ -83,9 +85,9 @@ local function initialize_level (state,id)
     state.leveldata.budget = 0
     state.leveldata.timer = 0
 
-    state.leveldata.CHOSEN_TOWERS = {}
-    state.leveldata.ENEMY_ARRAY = {}
-    state.leveldata.TOWER_ARRAY = {}
+    array.reset(state.leveldata.CHOSEN_TOWERS)
+    array.reset(state.leveldata.ENEMY_ARRAY)
+    array.reset(state.leveldata.TOWER_ARRAY)
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed

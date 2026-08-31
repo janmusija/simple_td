@@ -24,14 +24,15 @@ local function get_enemy(state,budget)
     local thresholds = {}
     local i = 1
     for k,v in pairs(state.leveldata.enemy_weights) do
+        --print("enemy: " .. k, "budget: " .. budget)
         if state.leveldata.enemy_wavepoints[k] <= budget then
             totalweight = totalweight + v
             thresholds[i] = {w = totalweight, e = k}
             i = i+1
         end
     end
-    local random_int = 0 -- 0<= random_int < totalweight -- TK
-    local out = ""
+    local random_int = math.random(0,totalweight-1)
+    local out = "FAILURE"
     for j,v in ipairs(thresholds) do
         if random_int < v.w then
             out = v.e
@@ -40,6 +41,10 @@ local function get_enemy(state,budget)
     end
     return out
 end
+
+local array = require("array")
+local e_c_t = require("data/enemy/enemy_class_table")
+local t_c_t = require("data/tower/tower_class_table")
 
 function updategaming(state)
     if (state.leveldata.phase == "play") then
@@ -51,7 +56,7 @@ function updategaming(state)
         --print(state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
 
         if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and
-            (state.leveldata.wavetimer >= 20*60 or false)) then
+            (state.leveldata.wavetimer >= 2*60 or false)) then
             -- the longest a wave is allowed to go before spawning the next is 20 seconds, and the least it can go is 2 seconds. additional conditions for spawning a wave early TBA
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
@@ -63,6 +68,7 @@ function updategaming(state)
         end
 
         -- destroy enemies and towers that are no longer alive
+        
 
         -- tick selected towers slots
 
@@ -78,10 +84,20 @@ function updategaming(state)
         if (state.leveldata.budget >= state.leveldata.__minwp) then
             -- select enemy
             local enid = get_enemy(state,state.leveldata.budget)
-
             -- attempt to spawn it
-            print(enid) -- TEMP
-            state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
+            if (enid ~= "FAILURE") then
+                -- more detailed lane selection that can blacklist certain lanes for certain enemies TBA
+                local lane = -1
+                lane = math.random(1,state.leveldata.breadth)
+
+                print("Spawn " .. enid .. " at " .. lane .. " (note: currently `cube` is matryoshka3, for test reasons)") -- TEMP
+                local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
+                print("Size: " .. a.size)
+
+                state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
+            else 
+                print("Error: failed to spawn!")
+            end
         end
 
         -- check if level is over (no enemies remain, budget is zero, and we have reached the final wave)

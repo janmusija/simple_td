@@ -37,7 +37,6 @@ local state = {
         enemy_weights (optional, defaults per-enemy) -> weights of enemies-- how likely they are to spawn when the budget allows them. 
         enemy_wavepoints (optional, defaults per-enemy) -> wavepoints of enemies -- how much of the budget the enemy takes
         initial_mana -> initial mana budget
-        enemy_modifiers (optional, default none) -> table of modifiers of enemies, keys are the enemies, values are tables of modifiers (changing health, speed, etc). will document further later when I implement this
         initial_wavepoints -> wavepoints in beginning of level
         wavepoint_scaling -> either a numeric value (constant number of wavepoints added per wave) or a function which maps wave number to wavepoints in that wave (in which case "initial_wavepoints" is ignored)
         waves -> number of waves

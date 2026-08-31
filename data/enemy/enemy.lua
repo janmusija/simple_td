@@ -23,19 +23,20 @@ Enemy = Object:extend()
 .weight -> how likely it is to spawn, by default
 ]]
 
-function Enemy:new(state,y)
+function Enemy:new(state,y,mods)
     -- common enemy initialization
-    self.sprite = nil
+    if mods == nil then mods = {} end
+    self.sprite = mods.sprite or nil
     self.y = y or 1 
     self.x = 0
-    self.speed = 0.40
-    self.hp = 20
+    self.speed = mods.speed or 0.40
+    self.hp = mods.hp or 20
     self.alive = true
     if (y == -1) then self.alive = false end -- dummy
 end
 
 Enemy.wavepoints = 2
-Enemy.weight = 2
+Enemy.weight = 1
 
 function Enemy:damage(state,dmg)
     self.hp = self.hp - dmg
