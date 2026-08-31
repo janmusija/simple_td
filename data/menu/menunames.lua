@@ -8,5 +8,6 @@ return {
     campaigns = "Campaigns",
     campaign1 = "Main Campaign",
     campaign2 = "NG+",
-    campaign3 = "NG++"
+    campaign3 = "NG++",
+    campaign4 = "The Scuffed Campaign"
 }

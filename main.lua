@@ -5,24 +5,32 @@ local menu = require("menu")
 local Object = require("classic") -- https://github.com/rxi/classic/blob/master/classic.lua
 local Button = require("ui/button")
 
+local load_level = require("data/load_level_from_disk")
+
 local w, h = love.graphics.getDimensions()
 local font = love.graphics.getFont()
-local state = {}
---[[
-    state[""] = "menu" (in menus), "pause" (paused), or "gaming" (playing the game). 
-    state["menu"] = the screen of the menu. e.g. "main"
-    state["cursor"] = cursor position in menu (navigated with arrow keys by default)
-    state["menuentryflag"] = turned on when entering a new menu
-]]--
+local state = {
+    [""] = "menu", -- (can be "menu" in menus, "pause" when paused, or "gaming" when playing the game)
+    menu = "main", -- the screen of the menu
+    cursor = 1, -- cursor position in menu (navigated  with arrow keys)
+    menuentryflag = true, -- turned on when entering a menu. then turned off once relevant code is executed
+    level = 0, -- what level is being played. 0 when not in use
+    leveldata = { -- data about current level
+        phase = "select" -- select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
+    },
+    playerdata = { -- data about the player
+
+    }
+}
 
 local test = 0
 
 function love.load() -- when game opens
-    state[""] = "menu"
-    state["menu"] = "main" 
-    state["cursor"] = 1
-    state["menuentryflag"] = true
     love.window.setTitle( "Menu Navigator 10000" )
+    load_level("","c193w1938l1378") -- attempt to load level 1378 of world 1938 of campaign 193. this does nothing yet because "loading a level" just prints what the expected path to that level is
+    load_level("","c1w1") -- this is not formatted properly to be recognized as indicating a path
+    load_level("","cwl3") -- nor is this
+    load_level("","campaign1w1l1") -- nor is this
 end
 
 function love.update(dt) -- dt = time to update last frame (thus expected time for this frame)
@@ -47,8 +55,6 @@ function love.draw(dt) -- rendering
     elseif s == "gaming" then
         drawgaming(dt,state)
     elseif s == "pause" then
-        love.graphics.setColor(0,0,0,0.2)
-        love.graphics.rectangle("fill",0,0,w,h)
         drawpause(dt,state)
     end
 end
@@ -82,7 +88,7 @@ local menutree = require("data/menu/tree")
 function love.keypressed(k)
     local s = state[""]
     if s == "pause" then
-        -- keybinds when paused
+        -- keybinds when paused)
         if iskey(k,"pause") then state[""] = "gaming" end
     elseif s == "menu" then
         -- keybinds when in menu

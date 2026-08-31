@@ -1,0 +1,37 @@
+local function isnumber(str)
+    local n = tonumber(str)
+    if n then return true else return false end
+end
+
+local function locate_level_file(id)
+    if string.len(id) > 5 and string.sub(id,1,1) == "c" then 
+        local i = 2
+        local j = 2
+        local camp = 0
+        local worl = 0
+        local lev = 0
+        while (isnumber(string.sub(id,i,j+1)) and j < string.len(id)) do j = j+1 end
+        camp = tonumber(string.sub(id,i,j))
+        if (j+4 > string.len(id) or string.sub(id,j+1,j+1) != "w") then return id end
+        i = j+2
+        j = i
+        while (isnumber(string.sub(id,i,j+1)) and j < string.len(id)) do j = j+1 end
+        worl = tonumber(string.sub(id,i,j))
+        if (j+2 > string.len(id) or string.sub(id,j+1,j+1) != "l") then return id end
+        i = j+2
+        j = i
+        while (isnumber(string.sub(id,i,j+1)) and j < string.len(id)) do j = j+1 end
+        lev = tonumber(string.sub(id,i,j))
+        if (j!= string.len(id)) then return id 
+        else 
+            local path = "c" .. camp .. "/w" .. worl .. "/l" .. lev
+            return path
+        end
+    end
+    return id
+end
+
+return function(LEVEL_DATA_CONTAINER,id)
+    local location = locate_level_file(id)
+    print(location) -- temp, for demo purposes
+end

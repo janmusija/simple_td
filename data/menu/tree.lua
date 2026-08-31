@@ -13,12 +13,6 @@ tree = {
     quit = {
         [2] = "quityes",
         [1] = "main"
-    },
-    campaigns = {
-        [1] = "campaign1", -- new game
-        [2] = "campaign2", -- ng+
-        [3] = "campaign3", -- ng++
-        [4] = "main"
     }
 }
 
@@ -41,13 +35,17 @@ local function add_many_children(parentnode,childname,count,backname)
     end
 end
 
+-- campaigns
+add_many_children("campaigns","campaign",4,"main")
+
 -- worlds of campaigns
 add_many_children("campaign1","c1world",5,"campaigns")
 add_many_children("campaign2","c2world",5,"campaigns")
 add_many_children("campaign3","c3world",5,"campaigns")
+add_many_children("campaign4","c4world",5,"campaigns")
 
 -- levels of worlds
-for i = 1,3 do
+for i = 1,4 do
     for j = 1,5 do
         add_many_children("c" .. i .. "world" .. j, "c" .. i .. "w" .. j .. "l",10,"campaign" .. i)
     end
