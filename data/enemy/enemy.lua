@@ -8,6 +8,7 @@ Enemy = Object:extend()
 .x -> column position (larger number -> closer to leaking)
 .speed -> tiles traveled per 60 frames.
 .sprite -> image for this enemy
+
 .block_stall_time -> if blocked, frames before un-blocking.
 
 :new -> create new enemy
@@ -32,6 +33,7 @@ function Enemy:new(state,y,mods)
     self.speed = mods.speed or 0.40
     self.hp = mods.hp or 20
     self.alive = true
+    self.block_stall_time = 0
     if (y == -1) then self.alive = false end -- dummy
 end
 
@@ -61,6 +63,7 @@ function Enemy:moveforward()
 end
 
 function Enemy:update(state)
+    print("x: ", self.x) -- test to demonstrate this is happening now
     if self.alive then
         if self.block_stall_time <= 0 then
             self:moveforward()

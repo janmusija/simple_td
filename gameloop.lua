@@ -55,7 +55,7 @@ function updategaming(state)
         --print(state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
 
         if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and
-            (state.leveldata.wavetimer >= 2*60 or false)) then
+            (state.leveldata.wavetimer >= 20*60 or false)) then
             -- the longest a wave is allowed to go before spawning the next is 20 seconds, and the least it can go is 2 seconds. additional conditions for spawning a wave early TBA
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
@@ -76,6 +76,10 @@ function updategaming(state)
         -- tick projectiles
 
         -- tick enemies
+        for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
+            local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+            en:update(state)
+        end
 
         -- tick enemy projectiles
 
@@ -91,6 +95,8 @@ function updategaming(state)
 
                 print("Spawn " .. enid .. " at " .. lane) -- TEMP
                 local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
+                
+                array.append(state.leveldata.ENEMY_ARRAY,a)
 
                 state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
             else 
