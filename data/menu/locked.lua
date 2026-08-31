@@ -22,6 +22,10 @@ locked.PERMALOCK = function(menu_id,unlock_level)
     locked.locks[menu_id] = true
 end
 
+locked.ALWAYS_UNLOCKED = function(menu_id,unlock_level) -- sure, you could also just not initialize it to begin with.
+    locked.locks[menu_id] = nil
+end
+
 -- update whether levels, worlds, etc are locked. previously I had some insane system that stored individual functions that would check these things individually every time you rendered a menu.
 locked.updateLocks = function (state)
     for i = 1,4 do

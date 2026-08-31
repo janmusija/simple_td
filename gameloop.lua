@@ -20,7 +20,10 @@ end
 
 function drawgaming(state)
     love.graphics.setColor(1,1,1)
-    if (state.leveldata.phase == "select") then love.graphics.print("omg! selecting")
+    if (state.leveldata.phase == "select") then
+        love.graphics.print("omg! selecting")
+        -- display enemies in level
+        -- display selection etc
     elseif (state.leveldata.phase == "play") then love.graphics.print("omg! playing")
     end
 end

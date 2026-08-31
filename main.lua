@@ -21,7 +21,17 @@ local state = {
     menuentryflag = true, -- turned on when entering a menu. then turned off once relevant code is executed
     level = 0, -- what level is being played. 0 when not in use
     leveldata = { -- data about current level
-        phase = "select" -- select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
+        --[[
+        phase -> select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
+
+        enemy_weights -> weights of enemies-- how likely they are to spawn when the budget allows them. 
+        initial_mana -> initial mana budget
+        enemy_modifiers -> table of modifiers of enemies, keys are the enemies, values are tables of modifiers (changing wavepoints, health, speed, etc). will document further later when I implement this
+        initial_wavepoints -> wavepoints in beginning of level
+        wavepoint_scaling -> either a numeric value (constant number of wavepoints added per wave) or a function which maps wave number to wavepoints in that wave (in which case "initial_wavepoints" is ignored)
+        
+
+        --]]
     },
     playerdata = { -- data about the player
         yen = 0,
