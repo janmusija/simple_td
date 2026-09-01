@@ -110,13 +110,13 @@ local spf = 1/MAX_FPS
 
 local function updatecamera(state)
     if isheld("panup") and state.leveldata.camera_locked == false then
-        state.leveldata.cameray = state.leveldata.cameray - settings.pan_sensitivity
+        state.leveldata.cameray = math.max(state.leveldata.cameray - settings.pan_sensitivity,-1.5)
     end
     if isheld("pandown") and state.leveldata.camera_locked == false then
         state.leveldata.cameray = state.leveldata.cameray + settings.pan_sensitivity
     end
     if isheld("panleft") and state.leveldata.camera_locked == false then
-        state.leveldata.camerax = state.leveldata.camerax - settings.pan_sensitivity
+        state.leveldata.camerax = math.max(state.leveldata.camerax - settings.pan_sensitivity,-0.5)
     end
     if isheld("panright") and state.leveldata.camera_locked == false then
         state.leveldata.camerax = state.leveldata.camerax + settings.pan_sensitivity
