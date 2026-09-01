@@ -43,11 +43,23 @@ function place_tower(state,x,y,tid)
 end
 
 function updategaming(state)
+    if (state.leveldata.phase == "select") then
+        if ((state.leveldata.camera_locked == true) and state.leveldata.camerax > -5) then
+            state.leveldata.camerax = state.leveldata.camerax - 0.2
+        else
+            state.leveldata.camera_locked = false
+        end
+    end
+
     if (state.leveldata.phase == "play") then
         -- test
 
         if array.size(state.leveldata.TOWER_ARRAY) < 1 then -- test tower
-            place_tower(state,9,3,"shooter")
+            for i = 1, state.leveldata.length do
+                for j = 1, state.leveldata.breadth do
+                    place_tower(state,i,j,"shooter")
+                end
+            end
         end
 
         -- tick timer, check if next wave should spawn
@@ -57,9 +69,11 @@ function updategaming(state)
         
         --print(state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
 
-        if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and
-            (state.leveldata.wavetimer >= 2*60 or false)) then
-            -- the longest a wave is allowed to go before spawning the next is 20 seconds, and the least it can go is 2 seconds. additional conditions for spawning a wave early TBA
+        if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and ( -- The least time between two waves is 2 seconds.
+            state.leveldata.wavetimer >= 20*60 or -- the longest a wave is allowed to go before spawning the next is 20 seconds.
+            (state.leveldata.wave > 0 and array.size(state.leveldata.ENEMY_ARRAY) == 0 and state.leveldata.budget < state.leveldata.__minwp) or -- if all enemies in a wave are destroyed, the next wave can spawn.
+            false)) then --  additional conditions for spawning a wave early TBA
+            
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
             if (type(state.leveldata.wavepoint_scaling) == "number") then
@@ -169,6 +183,15 @@ function drawgaming(state)
     local cy = state.leveldata.cameray
     local cz = state.leveldata.camerazoom
     local ZOOMED_SCALE_FACTOR = cam.ZOOMED_SCALE_FACTOR(cz)
+    -- display background, tiles
+    for j = 1, state.leveldata.breadth do
+        for i = 1, state.leveldata.length do
+            if (math.fmod(i+j,2) == 1) then love.graphics.setColor(0.8,0.8,0.8) else love.graphics.setColor(0.6,0.6,0.6) end
+            love.graphics.rectangle("fill",(-cx + i - 1)*ZOOMED_SCALE_FACTOR, (-cy + j - 1) * ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR)
+        end
+    end
+    love.graphics.setColor(1,1,1)
+    
     if (state.leveldata.phase == "select") then
         -- display level name
         local str = "Level " .. state.level
@@ -186,15 +209,6 @@ function drawgaming(state)
         -- display selection etc
     elseif (state.leveldata.phase == "play" or state.leveldata.phase == "win" or state.leveldata.phase == "loss") then
         --love.graphics.print("omg! playing")
-
-        -- display background, tiles
-        for j = 1, state.leveldata.breadth do
-            for i = 1, state.leveldata.length do
-                if (math.fmod(i+j,2) == 1) then love.graphics.setColor(0.8,0.8,0.8) else love.graphics.setColor(0.6,0.6,0.6) end
-                love.graphics.rectangle("fill",(-cx + i - 1)*ZOOMED_SCALE_FACTOR, (-cy + j - 1) * ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR)
-            end
-        end
-        love.graphics.setColor(1,1,1)
 
         -- display projectiles
         for i = 1, array.size(state.leveldata.PROJECTILE_ARRAY) do

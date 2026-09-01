@@ -90,9 +90,11 @@ local function initialize_level (state,id)
     state.leveldata.TOWER_ARRAY = array.new()
     state.leveldata.PROJECTILE_ARRAY = array.new()
 
-    state.leveldata.camerax = -0.5
+    --state.leveldata.camerax = -0.5
+    state.leveldata.camerax = state.leveldata.length
     state.leveldata.cameray = -1.5
     state.leveldata.camerazoom = 1
+    state.leveldata.camera_locked = true
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed
