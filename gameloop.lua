@@ -45,10 +45,18 @@ end
 function updategaming(state)
     if (state.leveldata.phase == "select") then
         if ((state.leveldata.camera_locked == true) and state.leveldata.camerax > -5) then
-            state.leveldata.camerax = state.leveldata.camerax - 0.2
-        else
-            state.leveldata.camera_locked = false
+            state.leveldata.camerax = state.leveldata.camerax - state.leveldata.camera_pan_velocity
+            state.leveldata.camera_pan_velocity = state.leveldata.camera_pan_velocity + 1/512
         end
+        if (state.leveldata.camera_locked == true and state.leveldata.camerax <= -5) then
+            state.leveldata.camera_locked = false
+            state.leveldata.camerax = -5
+            state.leveldata.camera_pan_velocity = nil
+        end
+    end
+
+    if (state.leveldata.camera_pan_velocity == nil and state.leveldata.show_selection == true) then -- show selection
+
     end
 
     if (state.leveldata.phase == "play") then
@@ -193,20 +201,36 @@ function drawgaming(state)
     love.graphics.setColor(1,1,1)
     
     if (state.leveldata.phase == "select") then
+        -- display selection etc
+        if (state.leveldata.camera_pan_velocity == nil and state.leveldata.show_selection == true) then
+            love.graphics.setColor(0.2,0,0.2)
+            love.graphics.rectangle("fill",0,0,w,h/7) -- selected towers bar
+            love.graphics.setColor(0.2,0,0.2,0.5)
+            love.graphics.rectangle("fill",4*w/11,3*h/14,w,h)
+        end
+        -- display enemies in level
+        local i = 0
+        love.graphics.setFont(font18)
+        love.graphics.setColor(1,1,1)
+        for k,v in pairs (state.leveldata.enemies) do
+            local str = k .. " (Weight: " .. state.leveldata.enemy_weights[k] .. ", Wavepoints: " ..  state.leveldata.enemy_wavepoints[k] .. ")"
+            if (state.leveldata.show_selection == true) then
+                love.graphics.print(str,6,h/7 + 60+i*36)
+            else
+                love.graphics.print(str,6,72+i*36)
+            end
+            i = i+1
+        end
+
         -- display level name
         local str = "Level " .. state.level
         if menunames[state.level] then str = menunames[state.level] .. " (" .. str .. ")" end
         love.graphics.setFont(font36)
-        love.graphics.print(str,6,18)
-        love.graphics.setFont(font18)
-        -- display enemies in level
-        local i = 0
-        for k,v in pairs (state.leveldata.enemies) do
-            local str = k .. " (Weight: " .. state.leveldata.enemy_weights[k] .. ", Wavepoints: " ..  state.leveldata.enemy_wavepoints[k] .. ")"
-            love.graphics.print(str,6,72+i*36)
-            i = i+1
+        if (state.leveldata.show_selection == true) then
+            love.graphics.print(str,6,h/7 + 6)
+        else
+            love.graphics.print(str,6,18)
         end
-        -- display selection etc
     elseif (state.leveldata.phase == "play" or state.leveldata.phase == "win" or state.leveldata.phase == "loss") then
         --love.graphics.print("omg! playing")
 

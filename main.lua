@@ -89,9 +89,11 @@ local state = {
     yen -> money
     completed_levels -> self explanatory
     seed -> seed of this run
+    max_slots -> most selectable slots
     ]]
         yen = 0,
-        completed_levels = {}
+        completed_levels = {},
+        max_slots = 5
     }
 }
 
@@ -167,6 +169,7 @@ end
 
 local menutree = require("data/menu/tree")
 
+local SELECTION_BOX_WIDTH = 9
 function love.keypressed(k)
     local s = state[""]
     if s == "pause" then
@@ -186,11 +189,54 @@ function love.keypressed(k)
             state["menuentryflag"] = true end
     elseif s == "gaming" then
         -- keybinds while in-game.
-        if iskey(k,"menuselect") and state.leveldata.phase == "select" then
-            -- condition to enure this only happens while key is on "start button": TK, you know, when start button exists
-            state.leveldata.phase = "play"
-            state.leveldata.camera_locked = false
-        elseif iskey(k,"menuselect") and (state.leveldata.phase == "loss" or state.leveldata.phase == "win") then
+        if state.leveldata.phase == "select" then -- selection phase keybinds
+            if iskey(k,"slotstoggle") then
+                state.leveldata.slotstoggle = not state.leveldata.slotstoggle
+            end
+            if iskey(k,"hideselection") then
+                state.leveldata.show_selection = not state.leveldata.show_selection
+                end
+            if iskey(k,"startlevel") then
+                state.leveldata.phase = "play"
+                state.leveldata.camera_locked = false
+                state.leveldata.camerax = -0.5
+            end
+            if iskey(k,"menuup") then
+                if (state.leveldata.slotstoggle == false and state.leveldata.selection_cursor_y > 1) then
+                    state.leveldata.selection_cursor_y = state.leveldata.selection_cursor_y - 1
+                    print ("selection cursor y: " .. state.leveldata.selection_cursor_y)
+                end
+            end
+            if iskey(k,"menudown") then
+                if (state.leveldata.slotstoggle == false) then
+                    state.leveldata.selection_cursor_y = state.leveldata.selection_cursor_y + 1
+                    print ("selection cursor y: " .. state.leveldata.selection_cursor_y)
+                end
+            end
+            if iskey(k,"menuleft") then
+                if (state.leveldata.slotstoggle == false) then
+                    if state.leveldata.selection_cursor_x > 1 then
+                    state.leveldata.selection_cursor_x = state.leveldata.selection_cursor_x - 1
+                    print ("selection cursor x: " .. state.leveldata.selection_cursor_x)
+                    end
+                elseif (state.leveldata.slots_cursor_x > 1) then
+                    state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x - 1
+                    print ("slots cursor x: " .. state.leveldata.slots_cursor_x)
+                end
+            end
+            if iskey(k,"menuright") then
+                if (state.leveldata.slotstoggle == false) then
+                    if state.leveldata.selection_cursor_x < SELECTION_BOX_WIDTH then
+                    state.leveldata.selection_cursor_x = state.leveldata.selection_cursor_x + 1
+                    print ("selection cursor x: " .. state.leveldata.selection_cursor_x)
+                    end
+                elseif (state.leveldata.slots_cursor_x < state.playerdata.max_slots) then
+                    state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x + 1
+                    print ("slots cursor x: " .. state.leveldata.slots_cursor_x)
+                end
+            end
+        end
+        if iskey(k,"menuselect") and (state.leveldata.phase == "loss" or state.leveldata.phase == "win") then
             state[""] = "menu"
             state["menu"] = state.leveldata.exitmenu or "main"
             state["menuentryflag"] = true

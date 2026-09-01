@@ -4,7 +4,8 @@ return {
     pan_sensitivity = 0.02, -- per-tick movement when panning
     keybinds = {
         pause = "space", -- pause the game
-        menuselect = "return", -- select an option in menu or start a level
+        menuselect = "return", -- select an option in men
+        startlevel = "g", -- start a level
         menuup = "up", -- go up menu
         menudown = "down", -- go down menu
         menuleft = "left", -- go left in menu
@@ -16,6 +17,8 @@ return {
         panright = "d", -- pan camera right (+x)
         zoomin = "i", -- zoom camera in
         zoomout = "o", -- zoom camera out
-        zoomreset = "=" -- reset zoom
+        zoomreset = "=", -- reset zoom
+        hideselection = "h", -- hide selection screen (to pan around map)
+        slotstoggle = "t" -- toggle between slots and board/selection
     }
 }
