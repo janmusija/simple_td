@@ -26,6 +26,7 @@ function Matryoshka:destroy(state)
 end
 
 function Matryoshka:moveforward()
+    if stunframes == nil then stunframes = 0 end
     if stunframes > 0 then
         stunframes = stunframes - 1
     else

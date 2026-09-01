@@ -88,6 +88,11 @@ local function initialize_level (state,id)
     state.leveldata.CHOSEN_TOWERS = array.new()
     state.leveldata.ENEMY_ARRAY = array.new()
     state.leveldata.TOWER_ARRAY = array.new()
+    state.leveldata.PROJECTILE_ARRAY = array.new()
+
+    state.leveldata.camerax = -0.5
+    state.leveldata.cameray = -1
+    state.leveldata.camerazoom = 0
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed

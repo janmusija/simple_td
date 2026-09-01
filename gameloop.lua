@@ -44,6 +44,7 @@ end
 local array = require("array")
 local e_c_t = require("data/enemy/enemy_class_table")
 local t_c_t = require("data/tower/tower_class_table")
+local p_c_t = require("data/projectile/projectile_class_table")
 
 function updategaming(state)
     if (state.leveldata.phase == "play") then
@@ -55,7 +56,7 @@ function updategaming(state)
         --print(state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
 
         if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and
-            (state.leveldata.wavetimer >= 2*60 or false)) then
+            (state.leveldata.wavetimer >= 20*60 or false)) then
             -- the longest a wave is allowed to go before spawning the next is 20 seconds, and the least it can go is 2 seconds. additional conditions for spawning a wave early TBA
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
@@ -66,7 +67,7 @@ function updategaming(state)
             end
         end
 
-        -- destroy enemies and towers that are no longer alive
+        -- destroy enemies, projectiles, and towers that are no longer alive
         do
             local i = 1
             while i <= array.size(state.leveldata.ENEMY_ARRAY) do
@@ -74,6 +75,26 @@ function updategaming(state)
                 if en.alive == false then
                     en:destroy(state)
                     array.delete(state.leveldata.ENEMY_ARRAY,i)
+                else
+                    i = i+1
+                end
+            end
+            i = 1
+            while i <= array.size(state.leveldata.PROJECTILE_ARRAY) do
+                local en = array.get(state.leveldata.PROJECTILE_ARRAY,i)
+                if en.alive == false then
+                    en:destroy(state)
+                    array.delete(state.leveldata.PROEJCTILE_ARRAY,i)
+                else
+                    i = i+1
+                end
+            end
+            i = 1
+            while i <= array.size(state.leveldata.TOWER_ARRAY) do
+                local en = array.get(state.leveldata.TOWER_ARRAY,i)
+                if en.alive == false then
+                    en:destroy(state)
+                    array.delete(state.leveldata.TOWER_ARRAY,i)
                 else
                     i = i+1
                 end
@@ -119,6 +140,10 @@ end
 
 function drawgaming(state)
     love.graphics.setColor(1,1,1)
+    local cx = state.leveldata.camerax
+    local cy = state.leveldata.cameray
+    local cz = state.leveldata.camerazoom
+    local SCALE_FACTOR = w/11
     if (state.leveldata.phase == "select") then
         -- display level name
         local str = "Level " .. state.level
@@ -134,6 +159,36 @@ function drawgaming(state)
             i = i+1
         end
         -- display selection etc
-    elseif (state.leveldata.phase == "play") then love.graphics.print("omg! playing")
+    elseif (state.leveldata.phase == "play") then
+        --love.graphics.print("omg! playing")
+
+        -- display background, tiles
+        for j = 1, state.leveldata.breadth do
+            for i = 1, state.leveldata.length do
+                if (math.fmod(i+j,2) == 1) then love.graphics.setColor(0.8,0.8,0.8) else love.graphics.setColor(0.6,0.6,0.6) end
+                love.graphics.rectangle("fill",(-cx + i)*SCALE_FACTOR, (-cy + j) * SCALE_FACTOR,SCALE_FACTOR,SCALE_FACTOR)
+            end
+        end
+        love.graphics.setColor(1,1,1)
+
+        -- display projectiles
+        for i = 1, array.size(state.leveldata.PROJECTILE_ARRAY) do
+            local proj = array.get(state.leveldata.PROJECTILE_ARRAY,i)
+            proj:draw(state)
+        end
+
+        -- display towers
+        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
+            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+            t:draw(state)
+        end
+        
+        -- display enemies
+        for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
+            local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+            en:draw(state)
+        end
+
+        -- display slots/ui
     end
 end

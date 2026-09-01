@@ -12,6 +12,32 @@ local locked = require("data/menu/locked")
 
 local w, h = love.graphics.getDimensions()
 local font = love.graphics.getFont()
+
+
+
+local function iskey(k, x)
+    local the = settings.keybinds[x]
+    if k == the then return true end
+    if type(the) == "table" then
+        for i, v in ipairs(the) do
+            if k == v then return true end
+        end
+    end
+end
+
+local function isheld(x)
+    local the = settings.keybinds[x]
+    if the == "" then return true end
+    if type(the) == "string" and love.keyboard.isDown(the) then
+        return true
+    end
+    if type(the) == "table" then
+        for i, v in ipairs(the) do
+            if love.keyboard.isDown(v) then return true end
+        end
+    end
+end
+
 local DEFAULT_FILE_NAME = "default"
 local state = {
     profile = DEFAULT_FILE_NAME,
@@ -31,6 +57,7 @@ local state = {
         ENEMY_ARRAY -> collection of currently extant enemies
         CHOSEN_TOWERS -> collection of towers
         TOWER_ARRAY -> collection of currently extant towers
+        PROJECTILE_ARRAY -> collection of currently extant projectiles
         MANA = current player mana
 
         enemies -> set of enemies that appear in this level
@@ -43,6 +70,12 @@ local state = {
         length -> length of board (default 9)
         breadth -> breadth of board (default 5)
         map -> layout of board (more details later). default to just regular tiles
+
+
+        camera_locked -> ability to pan camera
+        camerax -> position of top left corner of screen
+        cameray -> position of top left corner of screen
+        camerazoom -> scaling factor. 1.0 = default; larger = more zoomed
 
         __minwp -> smallest wavepoints among any enemy in this level
 
@@ -73,6 +106,23 @@ end
 local accumulator = 0.0
 local MAX_FPS = 60
 local spf = 1/MAX_FPS
+
+
+local function updatecamera(state)
+    if isheld("panup") and state.leveldata.camera_locked == false then
+        state.leveldata.cameray = state.leveldata.cameray - settings.pan_sensitivity
+    end
+    if isheld("pandown") and state.leveldata.camera_locked == false then
+        state.leveldata.cameray = state.leveldata.cameray + settings.pan_sensitivity
+    end
+    if isheld("panleft") and state.leveldata.camera_locked == false then
+        state.leveldata.camerax = state.leveldata.camerax - settings.pan_sensitivity
+    end
+    if isheld("panright") and state.leveldata.camera_locked == false then
+        state.leveldata.camerax = state.leveldata.camerax + settings.pan_sensitivity
+    end
+end
+
 function love.update(dt)
     accumulator = accumulator + dt
     if accumulator >= spf then 
@@ -97,32 +147,11 @@ function love.draw()
     if s == "menu" then
         drawmenu(state)
     elseif s == "gaming" then
+        updatecamera(state)
         drawgaming(state)
     elseif s == "pause" then
+        updatecamera(state)
         drawpause(state)
-    end
-end
-
-local function iskey(k, x)
-    local the = settings.keybinds[x]
-    if k == the then return true end
-    if type(the) == "table" then
-        for i, v in ipairs(the) do
-            if k == v then return true end
-        end
-    end
-end
-
-local function isheld(x)
-    local the = settings.keybinds[x]
-    if the == "" then return true end
-    if type(the) == "string" and love.keyboard.isDown(the) then
-        return true
-    end
-    if type(the) == "table" then
-        for i, v in ipairs(the) do
-            if love.keyboard.isDown(v) then return true end
-        end
     end
 end
 
@@ -147,7 +176,11 @@ function love.keypressed(k)
         if iskey(k,"menuquit") then state["menu"] = "quit"
             state["menuentryflag"] = true end
     elseif s == "gaming" then
-        if iskey(k,"menuselect") and state.leveldata.phase == "select" then state.leveldata.phase = "play" end
+        if iskey(k,"menuselect") and state.leveldata.phase == "select" then
+            -- condition to enure this only happens while key is on "start button": TK, you know, when start button exists
+            state.leveldata.phase = "play"
+            state.leveldata.camera_locked = false
+        end
         -- keybinds while in-game.
         if iskey(k,"pause") then state[""] = "pause" end
     end
