@@ -1,4 +1,5 @@
 local Object = require("classic")
+local array = require("array")
 
 local Projectile = Object:extend()
 
@@ -54,6 +55,20 @@ end
 function Projectile:update(state)
     if self.alive then 
         -- check for collision
+        if self.damagesenemies then
+            for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
+                local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+                if (math.abs(en.y - self.y) < self.hitboxradius and math.abs(en.x - self.x) < self.hitboxradius) then 
+                    -- todo: further logic on whether this projectile can hit this enemy! but that's for when actual content exists.
+                    self.alive = false
+                    en:damage(state,self.dmg)
+                    break
+                end
+            end
+        end
+        if self.alive and self.damagestowers then
+
+        end
         
         -- otherwise move
         self.x = self.x + self.velocityx
