@@ -59,6 +59,9 @@ function Projectile:update(state)
         self.x = self.x + self.velocityx
         self.y = self.y + self.velocityy
     end
+    if (self.x < -1 or self.y < -1 or self.x > state.leveldata.length + 1 or self.y > state.leveldata.breadth + 1) then -- cull offscreen projectiles
+        self.alive = false
+    end
 end
 
 return Projectile

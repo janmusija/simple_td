@@ -86,7 +86,7 @@ function updategaming(state)
                 local en = array.get(state.leveldata.PROJECTILE_ARRAY,i)
                 if en.alive == false then
                     en:destroy(state)
-                    array.delete(state.leveldata.PROEJCTILE_ARRAY,i)
+                    array.delete(state.leveldata.PROJECTILE_ARRAY,i)
                 else
                     i = i+1
                 end
@@ -126,8 +126,6 @@ function updategaming(state)
             local en = array.get(state.leveldata.ENEMY_ARRAY,i)
             en:update(state)
         end
-
-        -- tick enemy projectiles
 
         -- spawn enemies
         if (state.leveldata.budget >= state.leveldata.__minwp) then

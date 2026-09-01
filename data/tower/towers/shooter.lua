@@ -22,6 +22,7 @@ function Shooter:update(state)
         if self:valid_forward_target(state) then
             self.cooldown = self.rof
             self:fire_projectile(state,"bolt",-5/60,0)
+            print(state.leveldata.PROJECTILE_ARRAY.__size)
         end
     end
 end
