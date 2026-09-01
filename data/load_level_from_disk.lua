@@ -92,7 +92,7 @@ local function initialize_level (state,id)
 
     state.leveldata.camerax = -0.5
     state.leveldata.cameray = -1
-    state.leveldata.camerazoom = 0
+    state.leveldata.camerazoom = 1
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed

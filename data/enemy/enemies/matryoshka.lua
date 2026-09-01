@@ -1,4 +1,5 @@
 local Enemy = require("data/enemy/enemy")
+local array = require("array")
 
 local Matryoshka = Enemy:extend()
 
@@ -18,9 +19,10 @@ Matryoshka.weight = 1
 function Matryoshka:destroy(state)
     -- [create a new matryoshka]
     if self.size > 1 then
-    local m = Matryoshka(self.y,self.size-1)
+    local m = Matryoshka(state,self.y)
     m.stunframes = 10
     m.x = self.x
+    m.size = self.size - 1
     array.append(state.leveldata.ENEMY_ARRAY,m)
     end
 end

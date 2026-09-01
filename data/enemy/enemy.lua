@@ -1,4 +1,5 @@
 local Object = require("classic")
+local cam = require("camera")
 
 Enemy = Object:extend()
 --[[ members of instances:
@@ -29,7 +30,7 @@ function Enemy:new(state,y,mods)
     if mods == nil then mods = {} end
     self.sprite = mods.sprite or nil
     self.y = y or 1 
-    self.x = 0
+    self.x = -0.5
     self.speed = mods.speed or 0.40
     self.hp = mods.hp or 20
     self.alive = true
@@ -52,7 +53,9 @@ end
 function Enemy:draw(state)
     -- render it. TK
     if self.sprite then
-
+        local scale = cam.ZOOM_SF_ENTITY(state.leveldata.camerazoom)
+        local x,y = cam.get_canvas_position(state.leveldata.camerax, state.leveldata.cameray, state.leveldata.camerazoom, self.x, self.y)
+        love.graphics.draw(self.sprite, x-1, y, 0, scale, scale)
     else
     
     end

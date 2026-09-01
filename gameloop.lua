@@ -8,16 +8,6 @@ function updatepause(state)
 
 end
 
-function drawpause(state)
-    love.graphics.print("omg! pausing")
-
-    -- probably this basically entails running drawgaming but with this over it
-
-    love.graphics.setColor(0,0,0,0.2)
-    love.graphics.rectangle("fill",0,0,w,h)
-    love.graphics.setColor(1,1,1)
-end
-
 
 local function get_enemy(state,budget)
     local totalweight = 0
@@ -45,6 +35,7 @@ local array = require("array")
 local e_c_t = require("data/enemy/enemy_class_table")
 local t_c_t = require("data/tower/tower_class_table")
 local p_c_t = require("data/projectile/projectile_class_table")
+local cam = require("camera")
 
 function updategaming(state)
     if (state.leveldata.phase == "play") then
@@ -134,7 +125,20 @@ function updategaming(state)
             end
         end
 
-        -- check if level is over (no enemies remain, budget is zero, and we have reached the final wave)
+        -- check if level is over
+        -- loss = enemy past all defenses
+        for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
+            local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+            if (en.alive and en.x > state.leveldata.length + 1) then 
+                state.leveldata.phase = "loss"
+                en.alive = false
+            end
+        end
+        -- victory = (no enemies remain, budget is zero, and we have reached the final wave)
+        if (array.size(state.leveldata.ENEMY_ARRAY) == 0 and state.leveldata.budget < state.leveldata.__minwp and state.leveldata.wave >= state.leveldata.waves) then
+            state.leveldata.phase = "win"
+            state.playerdata.completed_levels[state.level] = true
+        end
     end
 end
 
@@ -143,7 +147,7 @@ function drawgaming(state)
     local cx = state.leveldata.camerax
     local cy = state.leveldata.cameray
     local cz = state.leveldata.camerazoom
-    local SCALE_FACTOR = w/11
+    local ZOOMED_SCALE_FACTOR = cam.ZOOMED_SCALE_FACTOR(cz)
     if (state.leveldata.phase == "select") then
         -- display level name
         local str = "Level " .. state.level
@@ -159,14 +163,14 @@ function drawgaming(state)
             i = i+1
         end
         -- display selection etc
-    elseif (state.leveldata.phase == "play") then
+    elseif (state.leveldata.phase == "play" or state.leveldata.phase == "win" or state.leveldata.phase == "loss") then
         --love.graphics.print("omg! playing")
 
         -- display background, tiles
         for j = 1, state.leveldata.breadth do
             for i = 1, state.leveldata.length do
                 if (math.fmod(i+j,2) == 1) then love.graphics.setColor(0.8,0.8,0.8) else love.graphics.setColor(0.6,0.6,0.6) end
-                love.graphics.rectangle("fill",(-cx + i)*SCALE_FACTOR, (-cy + j) * SCALE_FACTOR,SCALE_FACTOR,SCALE_FACTOR)
+                love.graphics.rectangle("fill",(-cx + i - 1)*ZOOMED_SCALE_FACTOR, (-cy + j - 1) * ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR)
             end
         end
         love.graphics.setColor(1,1,1)
@@ -190,5 +194,28 @@ function drawgaming(state)
         end
 
         -- display slots/ui
+
+        -- winloss overlay
+        if (state.leveldata.phase == "win") then
+
+        love.graphics.setColor(0,0,0,0.2)
+        love.graphics.rectangle("fill",0,0,w,h)
+        love.graphics.setColor(1,1,1)
+
+        elseif (state.leveldata.phase == "loss") then
+
+        love.graphics.setColor(0.5,0,0,0.3)
+        love.graphics.rectangle("fill",0,0,w,h)
+        love.graphics.setColor(1,1,1)
+
+        end
     end
+end
+
+function drawpause(state)
+    drawgaming(state)
+
+    love.graphics.setColor(0,0,0,0.2)
+    love.graphics.rectangle("fill",0,0,w,h)
+    love.graphics.setColor(1,1,1)
 end

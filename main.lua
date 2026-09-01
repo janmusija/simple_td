@@ -48,11 +48,12 @@ local state = {
     level = 0, -- what level is being played. 0 when not in use
     leveldata = { -- data about current level
         --[[
-        phase -> "select" to select towers. can also be "play" to be play, "win" when won, and "lose" when lost.
+        phase -> "select" to select towers. can also be "play" to be play, "win" when won, and "loss" when lost.
         wave -> current wave
         wavetimer -> time (frames) in this wave
         timer -> current time (frames) in this level
         budget -> remaining budget for this wave
+        exitmenu -> menu to exit to upon level completion
 
         ENEMY_ARRAY -> collection of currently extant enemies
         CHOSEN_TOWERS -> collection of towers
@@ -95,7 +96,7 @@ local state = {
 local test = 0
 
 function love.load() -- when game opens
-    love.window.setTitle( "Menu Navigator 10000" )
+    love.window.setTitle( "Tower defense (but only for people who dislike having towers)" )
     math.randomseed(os.time())
     local seed = math.random(0,16777215)
     state.playerdata.seed = seed
@@ -180,6 +181,11 @@ function love.keypressed(k)
             -- condition to enure this only happens while key is on "start button": TK, you know, when start button exists
             state.leveldata.phase = "play"
             state.leveldata.camera_locked = false
+        elseif iskey(k,"menuselect") and (state.leveldata.phase == "loss" or state.leveldata.phase == "win") then
+            state[""] = "menu"
+            state["menu"] = state.leveldata.exitmenu or "main"
+            state["menuentryflag"] = true
+            state["cursor"] = 1
         end
         -- keybinds while in-game.
         if iskey(k,"pause") then state[""] = "pause" end
