@@ -31,7 +31,7 @@ function Enemy:new(state,y,mods)
     self.sprite = mods.sprite or nil
     self.y = y or 1 
     self.x = -0.5
-    self.speed = mods.speed or 0.40
+    self.speed = mods.speed or 0.3
     self.hp = mods.hp or 20
     self.alive = true
     self.block_stall_time = 0

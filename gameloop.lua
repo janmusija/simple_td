@@ -200,13 +200,23 @@ function drawgaming(state)
 
         love.graphics.setColor(0,0,0,0.2)
         love.graphics.rectangle("fill",0,0,w,h)
-        love.graphics.setColor(1,1,1)
+        love.graphics.setColor(0,0.8,0)
+
+        love.graphics.setFont(font36)
+        love.graphics.print("You Won!!",w/2,h/2)
+        love.graphics.setFont(font18)
+        love.graphics.print("press the select key to continue",w/2,(h/2) + 48)
 
         elseif (state.leveldata.phase == "loss") then
 
         love.graphics.setColor(0.5,0,0,0.3)
         love.graphics.rectangle("fill",0,0,w,h)
-        love.graphics.setColor(1,1,1)
+        love.graphics.setColor(1,0,0)
+
+        love.graphics.setFont(font36)
+        love.graphics.print("YOU LOSE",w/2,h/2)
+        love.graphics.setFont(font18)
+        love.graphics.print("press the select key to continue",w/2,(h/2) + 48)
 
         end
     end

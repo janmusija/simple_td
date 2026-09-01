@@ -8,7 +8,7 @@ function Matryoshka:new(state,y,mods)
     Matryoshka.super.new(self,state,y) -- common enemy initialization
     self.sprite = mods.sprite or love.graphics.newImage("sprite/enemy/matryoshka.png")
     self.size = mods.size or 2
-    self.speed = mods.speed or 0.1 + (0.3/math.max((self.size+2/3),1))
+    self.speed = mods.speed or 0.1 + (0.2/math.max((self.size+2/3),1))
     self.hp = mods.hp or self.size * 10
     self.stunframes = 0
 end

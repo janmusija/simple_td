@@ -16,4 +16,8 @@ cam.ZOOMED_SCALE_FACTOR = function(cz)
     return cam.SCALE_FACTOR*cz
 end
 
+cam.get_abs_position = function(cx,cy,cz,x,y)
+    return (x + cx + 1)/(cam.SCALE_FACTOR*cz), (y+ cy + 1)/(cam.SCALE_FACTOR*cz)
+end
+
 return cam
