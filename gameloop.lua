@@ -55,7 +55,7 @@ function updategaming(state)
         --print(state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
 
         if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and
-            (state.leveldata.wavetimer >= 20*60 or false)) then
+            (state.leveldata.wavetimer >= 2*60 or false)) then
             -- the longest a wave is allowed to go before spawning the next is 20 seconds, and the least it can go is 2 seconds. additional conditions for spawning a wave early TBA
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
@@ -67,7 +67,18 @@ function updategaming(state)
         end
 
         -- destroy enemies and towers that are no longer alive
-        
+        do
+            local i = 1
+            while i <= array.size(state.leveldata.ENEMY_ARRAY) do
+                local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+                if en.alive == false then
+                    en:destroy(state)
+                    array.delete(state.leveldata.ENEMY_ARRAY,i)
+                else
+                    i = i+1
+                end
+            end
+        end
 
         -- tick selected towers slots
 
