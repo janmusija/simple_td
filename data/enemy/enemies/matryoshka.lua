@@ -21,7 +21,7 @@ function Matryoshka:destroy(state)
     local m = Matryoshka(self.y,self.size-1)
     m.stunframes = 10
     m.x = self.x
-    -- TK: put it into enemyarray
+    array.append(state.leveldata.ENEMY_ARRAY,m)
     end
 end
 
