@@ -47,7 +47,6 @@ end
 
 function Enemy:destroy(state)
     -- destroy by default does nothing because destruction is done within the table of enemies. but this will be called before destroying enemies
-    print("x: " .. self.x .. ", killed.")
 end
 
 function Enemy:draw(state)
@@ -64,15 +63,11 @@ function Enemy:moveforward()
 end
 
 function Enemy:update(state)
-    print("x: " .. self.x) -- test to demonstrate this is happening now
     if self.alive then
         if self.block_stall_time <= 0 then
             self:moveforward()
         end
         -- if blocked: attack. TK
-    end
-    if (self.x >10) then
-        self.alive = false
     end
 end
 

@@ -103,8 +103,6 @@ function updategaming(state)
                 -- more detailed lane selection that can blacklist certain lanes for certain enemies TBA
                 local lane = -1
                 lane = math.random(1,state.leveldata.breadth)
-
-                print("Spawn " .. enid .. " at " .. lane) -- TEMP
                 local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
                 
                 array.append(state.leveldata.ENEMY_ARRAY,a)
