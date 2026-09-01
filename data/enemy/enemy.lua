@@ -1,7 +1,7 @@
 local Object = require("classic")
 local cam = require("camera")
 
-Enemy = Object:extend()
+local Enemy = Object:extend()
 --[[ members of instances:
 .alive -> flag for enemies that are currently alive. dead enemies no longer exist and will be destroyed.
 .hp -> health

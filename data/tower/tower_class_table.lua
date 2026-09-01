@@ -30,7 +30,7 @@ end
 
 t_c_t.table = {
     shooter = Shooter,
-    mana_orb = Mana_Orb,
+    mana_orb = Mana_Orb
 }
 
 return t_c_t

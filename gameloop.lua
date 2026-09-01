@@ -37,8 +37,19 @@ local t_c_t = require("data/tower/tower_class_table")
 local p_c_t = require("data/projectile/projectile_class_table")
 local cam = require("camera")
 
+function place_tower(state,x,y,tid)
+    local a = t_c_t.get(tid)(state,x,y,t_c_t.mods(tid))
+    array.append(state.leveldata.TOWER_ARRAY,a)
+end
+
 function updategaming(state)
     if (state.leveldata.phase == "play") then
+        -- test
+
+        if array.size(state.leveldata.TOWER_ARRAY) < 1 then -- test tower
+            place_tower(state,9,3,"shooter")
+        end
+
         -- tick timer, check if next wave should spawn
         state.leveldata.timer = state.leveldata.timer + 1
         state.leveldata.wavetimer = state.leveldata.wavetimer + 1
@@ -47,7 +58,7 @@ function updategaming(state)
         --print(state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
 
         if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and
-            (state.leveldata.wavetimer >= 20*60 or false)) then
+            (state.leveldata.wavetimer >= 2*60 or false)) then
             -- the longest a wave is allowed to go before spawning the next is 20 seconds, and the least it can go is 2 seconds. additional conditions for spawning a wave early TBA
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
@@ -93,10 +104,22 @@ function updategaming(state)
         end
 
         -- tick selected towers slots
+        for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
+            local t = array.get(state.leveldata.CHOSEN_TOWERS,i)
+            -- todo
+        end
 
         -- tick towers
+        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
+            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+            t:update(state)
+        end
         
         -- tick projectiles
+        for i = 1, array.size(state.leveldata.PROJECTILE_ARRAY) do
+            local proj = array.get(state.leveldata.PROJECTILE_ARRAY,i)
+            proj:update(state)
+        end
 
         -- tick enemies
         for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
@@ -178,25 +201,37 @@ function drawgaming(state)
         -- display projectiles
         for i = 1, array.size(state.leveldata.PROJECTILE_ARRAY) do
             local proj = array.get(state.leveldata.PROJECTILE_ARRAY,i)
-            proj:draw(state)
+            if proj.alive then
+                proj:draw(state)
+            end
         end
 
         -- display towers
         for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
             local t = array.get(state.leveldata.TOWER_ARRAY,i)
-            t:draw(state)
+            if t.alive then
+                t:draw(state)
+            end
         end
         
         -- display enemies
         for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
             local en = array.get(state.leveldata.ENEMY_ARRAY,i)
-            en:draw(state)
+            if en.alive then
+                en:draw(state)
+            end
         end
 
         -- display slots/ui
         
         love.graphics.setColor(0.2,0,0.2)
         love.graphics.rectangle("fill",0,0,w,h/7)
+
+        love.graphics.setColor(0.7,0.7,0.7)
+        for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
+            local spr = array.get(state.leveldata.CHOSEN_TOWERS, i).sprite
+            love.graphics.rectangle("fill",0,0,w/9,h/7)
+        end
         
 
         -- winloss overlay

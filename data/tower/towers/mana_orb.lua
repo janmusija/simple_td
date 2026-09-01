@@ -4,7 +4,7 @@ local Mana_Orb = Tower:extend()
 
 function Mana_Orb:new(state,x,y,mods)
     if mods == nil then mods = {} end
-    Mana_Orb.super.new(self,state,x,y) -- common tower initialization
+    Mana_Orb.super.new(self,state,x,y,mods) -- common tower initialization
     self.sprite = mods.sprite or love.graphics.newImage("sprite/tower/shooter.png")
     self.production_size = mods.production_size or 10 -- produce mana in packets of this size
     self.production_period = mods.production_period or 15*60 -- in seconds

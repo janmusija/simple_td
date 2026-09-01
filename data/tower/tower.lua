@@ -1,6 +1,9 @@
 local Object = require("classic")
 
-Tower = Object:extend()
+local array = require("array")
+
+local Tower = Object:extend()
+
 --[[ members of instances:
 .alive -> flag for towers that are currently alive. dead towers no longer exist and will be destroyed.
 .hp -> health
@@ -58,6 +61,26 @@ end
 
 function Tower:update(state)
     
+end
+
+function Tower:valid_forward_target(state)
+    local out = false
+    for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
+        local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+        if (math.abs(en.y - self.y) < 0.5 and en.x < self.x - 0.5) then 
+            out = true
+            break
+        end
+    end
+    return out
+end
+
+local Projectile = require("data/projectile/projectile")
+local p_c_t = require("data/projectile/projectile_class_table")
+
+function Tower:fire_projectile(state,projid,velocityx,velocityy)
+    local p = p_c_t.get(projid)(state,self.x,self.y,velocityx,velocityy,p_c_t.mods(projid))
+    array.append(state.leveldata.PROJECTILE_ARRAY,p)
 end
 
 return Tower

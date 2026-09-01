@@ -55,8 +55,10 @@ local state = {
         budget -> remaining budget for this wave
         exitmenu -> menu to exit to upon level completion
 
+        selected_slot -> id of currently selected tower slot
+
         ENEMY_ARRAY -> collection of currently extant enemies
-        CHOSEN_TOWERS -> collection of towers
+        CHOSEN_TOWERS -> collection of towers. specifically, {sprite = [sprite of tower], id = [tower id], cooldown = [time in ticks until next use], recharge = [max cooldown duration], cost = [mama cost]}
         TOWER_ARRAY -> collection of currently extant towers
         PROJECTILE_ARRAY -> collection of currently extant projectiles
         MANA = current player mana
@@ -96,7 +98,7 @@ local state = {
 local test = 0
 
 function love.load() -- when game opens
-    love.window.setTitle( "Tower defense (but only for people who dislike having towers)" )
+    love.window.setTitle( "Tower defense (but only for people who like having exactly one tower whose projectiles ignore everything)" )
     math.randomseed(os.time())
     local seed = math.random(0,16777215)
     state.playerdata.seed = seed

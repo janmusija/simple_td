@@ -1,3 +1,5 @@
+local Bolt = require("data/projectile/projectiles/bolt")
+
 local p_c_t = {}
 
 p_c_t.get = function(id)
@@ -26,7 +28,7 @@ end
 
 
 p_c_t.table = {
-
+    bolt = Bolt
 }
 
 return p_c_t

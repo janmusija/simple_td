@@ -1,6 +1,6 @@
 local Object = require("classic")
 
-Projectile = Object:extend()
+local Projectile = Object:extend()
 
 --[[ members of instances:
 .alive -> flag for projectiles that are currently extant. others will be destroyed
@@ -39,10 +39,13 @@ function Projectile:destroy(state)
     -- destroy by default does nothing because destruction is done within the table of projectiles. but this will be called before destroying projectiles
 end
 
+local cam = require("camera")
 function Projectile:draw(state)
     -- render it. TK
     if self.sprite then
-        
+        local scale = cam.ZOOM_SF_ENTITY(state.leveldata.camerazoom)
+        local x,y = cam.get_canvas_position(state.leveldata.camerax, state.leveldata.cameray, state.leveldata.camerazoom, self.x, self.y)
+        love.graphics.draw(self.sprite, x-1, y, 0, scale, scale)
     else
     
     end
@@ -53,8 +56,8 @@ function Projectile:update(state)
         -- check for collision
         
         -- otherwise move
-        self.y = self.y + velocityy
-        self.x = self.x + velocityx
+        self.x = self.x + self.velocityx
+        self.y = self.y + self.velocityy
     end
 end
 

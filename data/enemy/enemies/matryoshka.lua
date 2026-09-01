@@ -5,7 +5,7 @@ local Matryoshka = Enemy:extend()
 
 function Matryoshka:new(state,y,mods)
     if mods == nil then mods = {} end
-    Matryoshka.super.new(self,state,y) -- common enemy initialization
+    Matryoshka.super.new(self,state,y,mods) -- common enemy initialization
     self.sprite = mods.sprite or love.graphics.newImage("sprite/enemy/matryoshka.png")
     self.size = mods.size or 2
     self.speed = mods.speed or 0.1 + (0.2/math.max((self.size+2/3),1))
