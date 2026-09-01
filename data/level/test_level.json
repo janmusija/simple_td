@@ -4,6 +4,7 @@
   "wavepoint_scaling": 2,
   "waves": 60,
   "initial_mana": 40,
-  "breadth": 5,
+  "breadth": 6,
+  "length": 12,
   "exitmenu": "campaigns"
 }

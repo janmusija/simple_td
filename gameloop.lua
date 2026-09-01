@@ -194,6 +194,10 @@ function drawgaming(state)
         end
 
         -- display slots/ui
+        
+        love.graphics.setColor(0.2,0,0.2)
+        love.graphics.rectangle("fill",0,0,w,h/7)
+        
 
         -- winloss overlay
         if (state.leveldata.phase == "win") then

@@ -111,13 +111,13 @@ local spf = 1/MAX_FPS
 
 local function updatecamera(state)
     if isheld("panup") and state.leveldata.camera_locked == false then
-        state.leveldata.cameray = math.max(state.leveldata.cameray - settings.pan_sensitivity,-1.5)
+        state.leveldata.cameray = math.max(state.leveldata.cameray - settings.pan_sensitivity,-2.0/state.leveldata.camerazoom)
     end
     if isheld("pandown") and state.leveldata.camera_locked == false then
         state.leveldata.cameray = state.leveldata.cameray + settings.pan_sensitivity
     end
     if isheld("panleft") and state.leveldata.camera_locked == false then
-        state.leveldata.camerax = math.max(state.leveldata.camerax - settings.pan_sensitivity,-0.5)
+        state.leveldata.camerax = math.max(state.leveldata.camerax - settings.pan_sensitivity,-0.5/state.leveldata.camerazoom)
     end
     if isheld("panright") and state.leveldata.camera_locked == false then
         state.leveldata.camerax = state.leveldata.camerax + settings.pan_sensitivity
@@ -177,6 +177,7 @@ function love.keypressed(k)
         if iskey(k,"menuquit") then state["menu"] = "quit"
             state["menuentryflag"] = true end
     elseif s == "gaming" then
+        -- keybinds while in-game.
         if iskey(k,"menuselect") and state.leveldata.phase == "select" then
             -- condition to enure this only happens while key is on "start button": TK, you know, when start button exists
             state.leveldata.phase = "play"
@@ -187,7 +188,15 @@ function love.keypressed(k)
             state["menuentryflag"] = true
             state["cursor"] = 1
         end
-        -- keybinds while in-game.
+        if (iskey(k,"zoomin")) then
+            state.leveldata.camerazoom = state.leveldata.camerazoom * 2
+        end
+        if (iskey(k,"zoomout")) then
+            state.leveldata.camerazoom = state.leveldata.camerazoom / 2
+        end
+        if (iskey(k,"zoomreset")) then
+            state.leveldata.camerazoom = 1.0
+        end
         if iskey(k,"pause") then state[""] = "pause" end
     end
 end

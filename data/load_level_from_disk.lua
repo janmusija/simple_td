@@ -91,7 +91,7 @@ local function initialize_level (state,id)
     state.leveldata.PROJECTILE_ARRAY = array.new()
 
     state.leveldata.camerax = -0.5
-    state.leveldata.cameray = -1
+    state.leveldata.cameray = -1.5
     state.leveldata.camerazoom = 1
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)

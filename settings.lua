@@ -13,6 +13,9 @@ return {
         panup = "w", -- pan camera up (-y)
         pandown = "s", -- pan camera down (+y)
         panleft = "a", -- pan camera left (-x)
-        panright = "d" -- pan camera right (+x)
+        panright = "d", -- pan camera right (+x)
+        zoomin = "i", -- zoom camera in
+        zoomout = "o", -- zoom camera out
+        zoomreset = "=" -- reset zoom
     }
 }
