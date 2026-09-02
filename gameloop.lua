@@ -83,7 +83,7 @@ function updategaming(state)
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
             if (type(state.leveldata.wavepoint_scaling) == "number") then
-                state.leveldata.budget = state.leveldata.initial_wavepoints + state.leveldata.wavepoint_scaling * (state.leveldata.wave -1)
+                state.leveldata.budget = state.leveldata.initial_wavepoints + state.leveldata.wavepoint_scaling * math.min(0,state.leveldata.wave -2)
             elseif (type(state.leveldata.wavepoint_scaling) == "function") then
                 state.leveldata.budget = state.leveldata.wavepoint_scaling(state.leveldata.wave)
             end
