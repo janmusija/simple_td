@@ -5,7 +5,7 @@ local Mana_Packet = Projectile:extend()
 function Mana_Packet:new(state,x,y,velocityx,velocityy,mods)
     if mods == nil then mods = {} end
     Mana_Packet.super.new(self,state,x,y,velocityx,velocityy,mods) -- common projectile initialization
-    self.sprite = mods.sprite or love.graphics.newImage("sprite/projectile/mana_packet.png")
+    self.sprite = mods.sprite or Mana_Packet.sprite
     self.dmg = mods.dmg or 0
     self.damagestowers = mods.damages_towers or false
     self.damagesenemies = mods.damagesenemies or false
@@ -13,6 +13,8 @@ function Mana_Packet:new(state,x,y,velocityx,velocityy,mods)
     self.mv = mods.mv or 10
     self.lifetime = 60*10 -- lifetime in ticks
 end
+
+Mana_Packet.sprite = love.graphics.newImage("sprite/projectile/mana_packet.png")
 
 function Mana_Packet:update(state)
     Mana_Packet.super.update(self,state)

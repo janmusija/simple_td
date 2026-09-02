@@ -83,10 +83,13 @@ function updategaming(state)
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
             if (type(state.leveldata.wavepoint_scaling) == "number") then
-                state.leveldata.budget = state.leveldata.initial_wavepoints + state.leveldata.wavepoint_scaling * math.min(0,state.leveldata.wave -2)
+                state.leveldata.budget = state.leveldata.initial_wavepoints + state.leveldata.wavepoint_scaling * math.max(0,state.leveldata.wave -2)
+                if (math.fmod(state.leveldata.wave,10) == 0) then state.leveldata.budget = state.leveldata.budget * 2 end -- multiples of ten get double budget
             elseif (type(state.leveldata.wavepoint_scaling) == "function") then
                 state.leveldata.budget = state.leveldata.wavepoint_scaling(state.leveldata.wave)
             end
+            state.leveldata.budget = state.leveldata.budget + state.leveldata.bonus_wavepoints
+            state.leveldata.bonus_wavepoints = 0
         end
 
         -- destroy enemies, projectiles, and towers that are no longer alive
@@ -317,6 +320,9 @@ function drawgaming(state)
         love.graphics.setColor(1,1,1)
         love.graphics.setFont(font18)
         love.graphics.print("Mana: " .. state.leveldata.mana, 2*w/3,6) -- placeholder
+        if state.leveldata.wave > 0 then
+            love.graphics.print("Wave: " .. state.leveldata.wave, 2*w/3,30) -- placeholder
+        end
 
 
         -- winloss overlay
@@ -330,6 +336,7 @@ function drawgaming(state)
         love.graphics.print("You Won!!",w/2,h/2)
         love.graphics.setFont(font18)
         love.graphics.print("press the select key to continue",w/2,(h/2) + 48)
+        love.graphics.print("total time:" .. math.floor(state.leveldata.timer/15.0)/4 .. "s (" .. state.leveldata.timer .. " ticks)",w/2,(h/2) + 96)
 
         elseif (state.leveldata.phase == "loss") then
 
@@ -341,6 +348,7 @@ function drawgaming(state)
         love.graphics.print("YOU LOSE",w/2,h/2)
         love.graphics.setFont(font18)
         love.graphics.print("press the select key to continue",w/2,(h/2) + 48)
+        love.graphics.print("total time:" .. math.floor(state.leveldata.timer/15.0)/4 .. "s (" .. state.leveldata.timer .. "ticks)",w/2,(h/2) + 96)
 
         end
     end

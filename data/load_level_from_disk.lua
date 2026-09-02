@@ -37,7 +37,7 @@ local e_c_t = require("data/enemy/enemy_class_table")
 local function int_from_string_bad(str)
     local out = 0
     for i = 1,string.len(str) do
-        out = out ~ bit.ror(string.byte(str,i),3*i)
+        out = bit.bxor(out,bit.ror(string.byte(str,i),3*i))
         --print(string.byte(str,i), out)
     end
     return out
@@ -109,14 +109,16 @@ local function initialize_level (state,id)
 
     state.leveldata.mana = state.leveldata.initial_mana or 40
 
+    state.leveldata.bonus_wavepoints = 0 -- for Horrible enemies.
+
     if (state.leveldata.passive_mana == nil) then state.leveldata.passive_mana = true end
     state.leveldata.ticks_per_passive_mana = state.leveldata.ticks_per_passive_mana or 15*6
     state.leveldata.time_till_next_passive_mana = state.leveldata.ticks_per_passive_mana
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed
-    seed = seed ~ state.playerdata.yen
-    seed = seed ~ int_from_string_bad(id)
+    seed = bit.bxor(seed,state.playerdata.yen)
+    seed = bit.bxor(seed, int_from_string_bad(id))
     --print(seed)
     math.randomseed(seed)
 end

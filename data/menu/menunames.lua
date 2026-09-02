@@ -13,5 +13,6 @@ return {
     campaign4 = "The Scuffed Campaign",
 
     -- levels
-    c1w1l1 = "Beginnings"
+    c1w1l1 = "Beginnings",
+    c1w1l2 = "Level Two",
 }

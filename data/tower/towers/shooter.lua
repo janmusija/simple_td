@@ -6,7 +6,7 @@ local Shooter = Tower:extend()
 function Shooter:new(state,x,y,mods)
     if mods == nil then mods = {} end
     Shooter.super.new(self,state,x,y,mods) -- common tower initialization
-    self.sprite = mods.sprite or love.graphics.newImage("sprite/tower/shooter.png")
+    self.sprite = mods.sprite or Shooter.sprite
     self.rof = mods.rof or 60 -- ticks per attack
     self.cooldown = 5 -- time left before next able to attack
     self.dps = mods.dps or 2 --damage per shot
@@ -14,6 +14,7 @@ function Shooter:new(state,x,y,mods)
 end
 
 Shooter.manacost = 40
+Shooter.sprite = love.graphics.newImage("sprite/tower/shooter.png")
 
 function Shooter:update(state)
     Shooter.super.update(self,state)

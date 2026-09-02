@@ -102,7 +102,7 @@ local state = {
 local test = 0
 
 function love.load() -- when game opens
-    love.window.setTitle( "Tower defense (but only for people who like having exactly one tower whose projectiles ignore everything)" )
+    love.window.setTitle( "Tower defense (could use balancing)" )
     math.randomseed(os.time())
     local seed = math.random(0,16777215)
     state.playerdata.seed = seed

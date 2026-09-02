@@ -29,7 +29,7 @@ end
 
 
 p_c_t.table = {
-    bolt = Bolt,
+    bolt = {__typ = Bolt, sprite = love.graphics.newImage("sprite/projectile/bolt.png")},
     mana_packet = Mana_Packet
 }
 
