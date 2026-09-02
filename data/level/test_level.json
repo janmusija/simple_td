@@ -6,5 +6,6 @@
   "initial_mana": 40,
   "breadth": 6,
   "length": 12,
-  "exitmenu": "campaigns"
+  "exitmenu": "campaigns",
+  "forceunlocks": {"mana_orb": true}
 }

@@ -38,6 +38,16 @@ array.delete_shift = function(ARR,i) -- delete and move elements over. slower bu
     ARR.__size = ARR.__size - 1
 end
 
+array.insert = function(ARR,i,app) -- insert an element at position i
+    assert(ARR.__size >= i+1, "index " .. i .. " too large!!")
+    assert(i > 0, "index " .. i .. " too small!!")
+    ARR.__size = ARR.__size + 1
+    for j = ARR.__size, i,-1 do
+        ARR.__array[j] = ARR.__array[j-1]
+    end
+    ARR.__array[i] = app 
+end
+
 array.get = function(ARR, i)
     assert(ARR.__size >= i, "index " .. i .. " too large!!")
     assert(i > 0, "index " .. i .. " too small!!")

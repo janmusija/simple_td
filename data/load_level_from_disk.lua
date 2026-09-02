@@ -103,7 +103,7 @@ local function initialize_level (state,id)
     state.leveldata.selection_cursor_y = 1
     state.leveldata.slots_cursor_x = 1
     state.leveldata.show_selection = true
-    state.slotstoggle = false -- is the cursor on slots?
+    state.leveldata.slotstoggle = false -- is the cursor on slots or selection?
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed

@@ -26,11 +26,25 @@ t_c_t.mods = function(id)
     end
 end
 
-
-
 t_c_t.table = {
     shooter = Shooter,
     mana_orb = Mana_Orb
 }
+
+t_c_t.number_table = {
+    [1] = "shooter",
+    [2] = "mana_orb"
+}
+
+t_c_t.special_slot_sprite_locations = {}
+
+t_c_t.slot_sprite = function(id)
+    if t_c_t.special_slot_sprite_locations[id] then
+        return love.graphics.newImage(t_c_t.special_slot_sprite_locations[id])
+    else
+        return love.graphics.newImage("sprite/tower/slot/" .. id .. ".png")
+    end
+end
+
 
 return t_c_t

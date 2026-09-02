@@ -5,6 +5,9 @@ local menu = require("menu")
 local Object = require("classic") -- https://github.com/rxi/classic/blob/master/classic.lua
 local Button = require("ui/button")
 local sl = require("save_load")
+local array = require("array")
+
+local td_constants = require("data/td_constants")
 
 local load_level = require("data/load_level_from_disk")
 
@@ -37,10 +40,8 @@ local function isheld(x)
         end
     end
 end
-
-local DEFAULT_FILE_NAME = "default"
 local state = {
-    profile = DEFAULT_FILE_NAME,
+    profile = td_constants.DEFAULT_FILE_NAME,
     [""] = "menu", -- (can be "menu" in menus, "pause" when paused, or "gaming" when playing the game)
     menu = "main", -- the screen of the menu
     cursor = 1, -- cursor position in menu (navigated  with arrow keys)
@@ -93,7 +94,7 @@ local state = {
     ]]
         yen = 0,
         completed_levels = {},
-        max_slots = 5
+        max_slots = td_constants.INITIAL_MAX_SLOTS
     }
 }
 
@@ -104,7 +105,7 @@ function love.load() -- when game opens
     math.randomseed(os.time())
     local seed = math.random(0,16777215)
     state.playerdata.seed = seed
-    if io.open("save/" .. DEFAULT_FILE_NAME .. ".json", "r") then sl.load_player_data(DEFAULT_FILE_NAME,state) end
+    if io.open("save/" .. td_constants.DEFAULT_FILE_NAME .. ".json", "r") then sl.load_player_data(td_constants.DEFAULT_FILE_NAME,state) end
     locked.updateLocks(state)
 end
 
@@ -168,8 +169,8 @@ end
 
 
 local menutree = require("data/menu/tree")
+local t_c_t = require("data/tower/tower_class_table")
 
-local SELECTION_BOX_WIDTH = 9
 function love.keypressed(k)
     local s = state[""]
     if s == "pause" then
@@ -201,38 +202,56 @@ function love.keypressed(k)
                 state.leveldata.camera_locked = false
                 state.leveldata.camerax = -0.5
             end
+            if iskey(k, "menuselect") then
+                if (state.leveldata.slotstoggle) then
+                    -- currently on slots. deselect this slot
+                    if array.size(state.leveldata.CHOSEN_TOWERS) >= state.leveldata.slots_cursor_x then
+                        array.delete_shift(state.leveldata.CHOSEN_TOWERS,state.leveldata.slots_cursor_x)
+                    end
+                else
+                    local tid = state.leveldata.selection_cursor_x + 9* (state.leveldata.selection_cursor_y - 1)
+                    -- currently on selection. add this to slots if unlocked and space exists
+                    if array.size(state.leveldata.CHOSEN_TOWERS) < state.playerdata.max_slots and -- space exists
+                    t_c_t.number_table[tid] ~= nil and -- and there is a thing to select at all
+                    locked.unlocked("tower_" .. t_c_t.number_table[tid]) or (type(state.leveldata.forceunlocks) == "table" and state.leveldata.forceunlocks[t_c_t.number_table[tid]] == true) -- unlocked
+                    then
+                        local alreadychosen = false
+                        for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
+                            if t_c_t.number_table[tid] == array.get(state.leveldata.CHOSEN_TOWERS,i) then
+                                alreadychosen = true
+                                break
+                            end
+                        end
+                        if not alreadychosen then array.append(state.leveldata.CHOSEN_TOWERS,t_c_t.number_table[tid]) end
+                    end
+                end
+            end
             if iskey(k,"menuup") then
                 if (state.leveldata.slotstoggle == false and state.leveldata.selection_cursor_y > 1) then
                     state.leveldata.selection_cursor_y = state.leveldata.selection_cursor_y - 1
-                    print ("selection cursor y: " .. state.leveldata.selection_cursor_y)
                 end
             end
             if iskey(k,"menudown") then
                 if (state.leveldata.slotstoggle == false) then
                     state.leveldata.selection_cursor_y = state.leveldata.selection_cursor_y + 1
-                    print ("selection cursor y: " .. state.leveldata.selection_cursor_y)
                 end
             end
             if iskey(k,"menuleft") then
                 if (state.leveldata.slotstoggle == false) then
                     if state.leveldata.selection_cursor_x > 1 then
                     state.leveldata.selection_cursor_x = state.leveldata.selection_cursor_x - 1
-                    print ("selection cursor x: " .. state.leveldata.selection_cursor_x)
                     end
                 elseif (state.leveldata.slots_cursor_x > 1) then
                     state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x - 1
-                    print ("slots cursor x: " .. state.leveldata.slots_cursor_x)
                 end
             end
             if iskey(k,"menuright") then
                 if (state.leveldata.slotstoggle == false) then
-                    if state.leveldata.selection_cursor_x < SELECTION_BOX_WIDTH then
+                    if state.leveldata.selection_cursor_x < td_constants.SELECTION_BOX_WIDTH then
                     state.leveldata.selection_cursor_x = state.leveldata.selection_cursor_x + 1
-                    print ("selection cursor x: " .. state.leveldata.selection_cursor_x)
                     end
                 elseif (state.leveldata.slots_cursor_x < state.playerdata.max_slots) then
                     state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x + 1
-                    print ("slots cursor x: " .. state.leveldata.slots_cursor_x)
                 end
             end
         end

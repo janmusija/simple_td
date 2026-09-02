@@ -1,6 +1,7 @@
 local font36 = love.graphics.newFont(36)
 local font18 = love.graphics.newFont(18)
 local w, h = love.graphics.getDimensions()
+local td_constants = require("data/td_constants")
 
 local menunames = require("data/menu/menunames")
 
@@ -36,6 +37,7 @@ local e_c_t = require("data/enemy/enemy_class_table")
 local t_c_t = require("data/tower/tower_class_table")
 local p_c_t = require("data/projectile/projectile_class_table")
 local cam = require("camera")
+local locked = require("data/menu/locked")
 
 function place_tower(state,x,y,tid)
     local a = t_c_t.get(tid)(state,x,y,t_c_t.mods(tid))
@@ -200,13 +202,32 @@ function drawgaming(state)
     end
     love.graphics.setColor(1,1,1)
     
+    local selection_x = 4*w/11
+    local selection_y = 3*h/14
+    local slotwidth = (w - selection_x) / (td_constants.SELECTION_BOX_WIDTH)
+    
     if (state.leveldata.phase == "select") then
         -- display selection etc
         if (state.leveldata.camera_pan_velocity == nil and state.leveldata.show_selection == true) then
             love.graphics.setColor(0.2,0,0.2)
-            love.graphics.rectangle("fill",0,0,w,h/7) -- selected towers bar
+            love.graphics.rectangle("fill",0,0,w,slotwidth) -- selected towers bar
             love.graphics.setColor(0.2,0,0.2,0.5)
-            love.graphics.rectangle("fill",4*w/11,3*h/14,w,h)
+            
+            love.graphics.rectangle("fill",selection_x,selection_y,w,h)
+            love.graphics.setColor(1,1,1)
+            for i,v in ipairs(t_c_t.number_table) do
+                if (locked.unlocked("tower_" .. v) or (type(state.leveldata.forceunlocks) == "table" and state.leveldata.forceunlocks[v] == true)) then -- only displpay unlocked towers.
+                    local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
+                    local y = math.floor((i-1)/td_constants.SELECTION_BOX_WIDTH)
+                    love.graphics.draw(t_c_t.slot_sprite(v),selection_x+x*slotwidth,selection_y+y*slotwidth,0,slotwidth/128,slotwidth/128)
+                end
+            end
+
+            for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
+                local str = array.get(state.leveldata.CHOSEN_TOWERS,i)
+                local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
+                love.graphics.draw(t_c_t.slot_sprite(str),x*slotwidth,0,0,slotwidth/128,slotwidth/128)
+            end
         end
         -- display enemies in level
         local i = 0
@@ -215,19 +236,28 @@ function drawgaming(state)
         for k,v in pairs (state.leveldata.enemies) do
             local str = k .. " (Weight: " .. state.leveldata.enemy_weights[k] .. ", Wavepoints: " ..  state.leveldata.enemy_wavepoints[k] .. ")"
             if (state.leveldata.show_selection == true) then
-                love.graphics.print(str,6,h/7 + 60+i*36)
+                love.graphics.print(str,6,slotwidth + 60+i*36)
             else
                 love.graphics.print(str,6,72+i*36)
             end
             i = i+1
         end
 
+        -- cursors
+        if (state.leveldata.show_selection == true and state.leveldata.camera_pan_velocity == nil) then
+        if state.leveldata.slotstoggle then love.graphics.setColor(0.4,0.25,0) else love.graphics.setColor(0.8,0.5,0) end
+        love.graphics.rectangle("line",selection_x + (state.leveldata.selection_cursor_x - 1)* slotwidth,selection_y + (state.leveldata.selection_cursor_y - 1)* slotwidth,slotwidth,slotwidth)
+        if state.leveldata.slotstoggle then love.graphics.setColor(0.8,0.5,0) else love.graphics.setColor(0.4,0.25,0) end
+        love.graphics.rectangle("line",(state.leveldata.slots_cursor_x - 1)* slotwidth,0,slotwidth,slotwidth)
+        end
+
         -- display level name
         local str = "Level " .. state.level
         if menunames[state.level] then str = menunames[state.level] .. " (" .. str .. ")" end
         love.graphics.setFont(font36)
+        love.graphics.setColor(1,1,1)
         if (state.leveldata.show_selection == true) then
-            love.graphics.print(str,6,h/7 + 6)
+            love.graphics.print(str,6,slotwidth + 6)
         else
             love.graphics.print(str,6,18)
         end
@@ -261,12 +291,12 @@ function drawgaming(state)
         -- display slots/ui
         
         love.graphics.setColor(0.2,0,0.2)
-        love.graphics.rectangle("fill",0,0,w,h/7)
+        love.graphics.rectangle("fill",0,0,w,slotwidth)
 
         love.graphics.setColor(0.7,0.7,0.7)
         for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
             local spr = array.get(state.leveldata.CHOSEN_TOWERS, i).sprite
-            love.graphics.rectangle("fill",0,0,w/9,h/7)
+            love.graphics.rectangle("fill",0,0,w/9,slotwidth)
         end
         
 
