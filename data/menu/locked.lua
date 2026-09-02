@@ -46,6 +46,7 @@ locked.updateLocks = function (state)
     -- towers
     locked.ALWAYS_UNLOCKED("tower_shooter")
     locked.LOCK_BY_LEVEL("tower_mana_orb", "c1w1l1", state)
+    locked.LOCK_BY_LEVEL("tower_brick", "c1w1l2", state)
 end
 
 

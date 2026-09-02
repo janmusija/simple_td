@@ -1,5 +1,6 @@
 local Tower = require("data/tower/tower")
 
+-- basic attacker
 local Shooter = Tower:extend()
 
 function Shooter:new(state,x,y,mods)

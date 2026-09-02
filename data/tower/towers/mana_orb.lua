@@ -1,5 +1,6 @@
 local Tower = require("data/tower/tower")
 
+-- mana production
 local Mana_Orb = Tower:extend()
 
 function Mana_Orb:new(state,x,y,mods)

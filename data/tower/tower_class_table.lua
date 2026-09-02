@@ -1,5 +1,6 @@
 local Mana_Orb = require("data/tower/towers/mana_orb")
 local Shooter = require("data/tower/towers/shooter")
+local Brick = require("data/tower/towers/brick")
 
 local t_c_t = {}
 
@@ -28,12 +29,14 @@ end
 
 t_c_t.table = {
     shooter = Shooter,
-    mana_orb = Mana_Orb
+    mana_orb = Mana_Orb,
+    brick = Brick,
 }
 
 t_c_t.number_table = {
     [1] = "shooter",
-    [2] = "mana_orb"
+    [2] = "mana_orb",
+    [3] = "brick",
 }
 
 t_c_t.special_slot_sprite_locations = {}
