@@ -327,4 +327,14 @@ function drawpause(state)
     love.graphics.setColor(0,0,0,0.2)
     love.graphics.rectangle("fill",0,0,w,h)
     love.graphics.setColor(1,1,1)
+
+    if state.leveldata.want_to_quit ~= nil then
+        love.graphics.setFont(font36)
+        love.graphics.print("Really Quit?",w/2,h/2)
+        love.graphics.setFont(font18)
+        love.graphics.print("press select key for yes, otherwise any other key",w/2,h/2 + 40)
+    else
+        love.graphics.setFont(font18)
+        love.graphics.print("[press pause key to unpause]",w/2,h/2)
+    end
 end

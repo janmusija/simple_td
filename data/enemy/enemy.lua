@@ -1,5 +1,6 @@
 local Object = require("classic")
 local cam = require("camera")
+local array = require("array")
 
 local Enemy = Object:extend()
 --[[ members of instances:
@@ -9,8 +10,12 @@ local Enemy = Object:extend()
 .x -> column position (larger number -> closer to leaking)
 .speed -> tiles traveled per 60 frames.
 .sprite -> image for this enemy
+.attack_dmg -> attack damage
+.attack_recharge -> rate at which attacks are
+
 
 .block_stall_time -> if blocked, frames before un-blocking.
+.next_attack_ticks -> time until next attack
 
 :new -> create new enemy
 :destroy -> actions to perform when destroyed (e.g. matryoshkas spawn further, smaller matryoshkas)
@@ -34,7 +39,10 @@ function Enemy:new(state,y,mods)
     self.speed = mods.speed or 0.3
     self.hp = mods.hp or 20
     self.alive = true
-    self.block_stall_time = 0
+    self.block_stall_time = 10
+    self.attack_dmg = mods.attack_dmg or 4
+    self.attack_recharge = mods.attack_recharge or 30
+    self.next_attack_ticks = 0
     if (y == -1) then self.alive = false end -- dummy
 end
 
@@ -65,12 +73,34 @@ function Enemy:moveforward()
     self.x = self.x + self.speed * (1/60) -- speed is x per 60 frames
 end
 
+
 function Enemy:update(state)
     if self.alive then
+        if self.next_attack_ticks > 0 then self.next_attack_ticks = self.next_attack_ticks -1 end
         if self.block_stall_time <= 0 then
             self:moveforward()
         end
         -- if blocked: attack. TK
+        local blocked = false
+        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
+            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+            local xdist = self.x - t.x
+            local ydist = self.y - t.y
+            if (xdist < 0.25 and xdist > -0.35 and math.abs(ydist) <0.5 ) then
+                blocked = true
+                self.block_stall_time = 10
+                
+                -- attack tower
+                if (self.next_attack_ticks <= 0) then
+                self.next_attack_ticks = self.attack_recharge
+                t:damage(state,self.attack_dmg)
+                end
+                break
+            end
+        end
+        if not blocked and self.block_stall_time > 0 then
+            self.block_stall_time = self.block_stall_time -1
+        end
     end
 end
 

@@ -175,7 +175,18 @@ function love.keypressed(k)
     local s = state[""]
     if s == "pause" then
         -- keybinds when paused)
-        if iskey(k,"pause") then state[""] = "gaming" end
+        if state.leveldata.want_to_quit ~= nil then
+            state.leveldata.want_to_quit = nil
+            if iskey(k,"menuselect") then
+            state[""] = "menu"
+            state["menu"] = state.leveldata.exitmenu or "main"
+            state["menuentryflag"] = true
+            state["cursor"] = 1
+            end
+        else
+            if iskey(k,"pause") then state[""] = "gaming" end
+            if iskey(k,"menuquit") then state.leveldata.want_to_quit = true end
+        end
     elseif s == "menu" then
         -- keybinds when in menu
         if iskey(k,"menuup") then state["cursor"] = state["cursor"] - 1 end
@@ -189,6 +200,10 @@ function love.keypressed(k)
         if iskey(k,"menuquit") then state["menu"] = "quit"
             state["menuentryflag"] = true end
     elseif s == "gaming" then
+        if iskey(k,"menuquit") then
+            state.leveldata.want_to_quit = true
+            state[""] = "pause"
+        end
         -- keybinds while in-game.
         if state.leveldata.phase == "select" then -- selection phase keybinds
             if iskey(k,"slotstoggle") then
@@ -280,10 +295,10 @@ function love.keypressed(k)
             end
             if iskey(k,"menuright") then
                 if (state.leveldata.slotstoggle == false) then
-                    if state.leveldata.selection_cursor_x < state.leveldata.length then
+                    if state.leveldata.board_cursor_x < state.leveldata.length then
                     state.leveldata.board_cursor_x = state.leveldata.board_cursor_x + 1
                     end
-                elseif (state.leveldata.slots_cursor_x < state.playerdata.max_slots) then
+                elseif (state.leveldata.slots_cursor_x < array.size(state.leveldata.CHOSEN_TOWERS)) then
                     state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x + 1
                 end
             end
