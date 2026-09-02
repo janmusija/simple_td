@@ -1,4 +1,5 @@
 local Bolt = require("data/projectile/projectiles/bolt")
+local Mana_Packet = require("data/projectile/projectiles/mana_packet")
 
 local p_c_t = {}
 
@@ -28,7 +29,8 @@ end
 
 
 p_c_t.table = {
-    bolt = Bolt
+    bolt = Bolt,
+    mana_packet = Mana_Packet
 }
 
 return p_c_t

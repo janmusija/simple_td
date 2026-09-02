@@ -14,4 +14,15 @@ end
 
 Mana_Orb.manacost = 30
 
+function Mana_Orb:update(state)
+    Mana_Orb.super.update(self,state)
+    -- decrease cooldown
+    if (self.tick_countdown > 0) then self.tick_countdown = self.tick_countdown -1
+    else
+        self.tick_countdown = self.production_period
+        local m = {mv = self.production_size}
+        self:fire_projectile(state,"mana_packet",0,1/3,m)
+    end
+end
+
 return Mana_Orb

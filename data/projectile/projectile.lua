@@ -52,6 +52,12 @@ function Projectile:draw(state)
     end
 end
 
+function Projectile:culling(state) -- cull offscreen projectiles
+    if (self.x < -1 or self.y < -1 or self.x > state.leveldata.length + 1 or self.y > state.leveldata.breadth + 1) then
+        self.alive = false
+    end
+end
+
 function Projectile:update(state)
     if self.alive then 
         -- check for collision
@@ -67,16 +73,23 @@ function Projectile:update(state)
             end
         end
         if self.alive and self.damagestowers then
-
+            for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
+                local t = array.get(state.leveldata.TOWER_ARRAY,i)
+                if (math.abs(t.y - self.y) < self.hitboxradius and math.abs(t.x - self.x) < self.hitboxradius) then 
+                    -- todo: further logic on whether this projectile can hit this tower! but that's for when actual content exists.
+                    self.alive = false
+                    t:damage(state,self.dmg)
+                    break
+                end
+            end
         end
         
         -- otherwise move
         self.x = self.x + self.velocityx
         self.y = self.y + self.velocityy
     end
-    if (self.x < -1 or self.y < -1 or self.x > state.leveldata.length + 1 or self.y > state.leveldata.breadth + 1) then -- cull offscreen projectiles
-        self.alive = false
-    end
+
+    self:culling(state) -- cull based on usual conditions
 end
 
 return Projectile

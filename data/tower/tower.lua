@@ -78,8 +78,13 @@ end
 local Projectile = require("data/projectile/projectile")
 local p_c_t = require("data/projectile/projectile_class_table")
 
-function Tower:fire_projectile(state,projid,velocityx,velocityy)
-    local p = p_c_t.get(projid)(state,self.x,self.y,velocityx,velocityy,p_c_t.mods(projid))
+function Tower:fire_projectile(state,projid,velocityx,velocityy,modoverride)
+    local p
+    if (modoverride ~= nil) then
+        p = p_c_t.get(projid)(state,self.x,self.y,velocityx,velocityy,modoverride)
+    else
+        p = p_c_t.get(projid)(state,self.x,self.y,velocityx,velocityy,p_c_t.mods(projid))
+    end
     array.append(state.leveldata.PROJECTILE_ARRAY,p)
 end
 
