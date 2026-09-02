@@ -38,11 +38,21 @@ t_c_t.number_table = {
 
 t_c_t.special_slot_sprite_locations = {}
 
+t_c_t.special_costs = {}
+
 t_c_t.slot_sprite = function(id)
     if t_c_t.special_slot_sprite_locations[id] then
         return love.graphics.newImage(t_c_t.special_slot_sprite_locations[id])
     else
         return love.graphics.newImage("sprite/tower/slot/" .. id .. ".png")
+    end
+end
+
+t_c_t.cost = function(id)
+    if t_c_t.special_costs[id] then
+        return t_c_t.special_costs[id]
+    else
+        return t_c_t.table[id].manacost
     end
 end
 

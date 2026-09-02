@@ -62,7 +62,7 @@ local state = {
         CHOSEN_TOWERS -> collection of towers. specifically, {sprite = [sprite of tower], id = [tower id], cooldown = [time in ticks until next use], recharge = [max cooldown duration], cost = [mama cost]}
         TOWER_ARRAY -> collection of currently extant towers
         PROJECTILE_ARRAY -> collection of currently extant projectiles
-        MANA = current player mana
+        mana = current player mana
 
         enemies -> set of enemies that appear in this level
         enemy_weights (optional, defaults per-enemy) -> weights of enemies-- how likely they are to spawn when the budget allows them. 
@@ -252,6 +252,62 @@ function love.keypressed(k)
                     end
                 elseif (state.leveldata.slots_cursor_x < state.playerdata.max_slots) then
                     state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x + 1
+                end
+            end
+        end
+        if state.leveldata.phase == "play" then -- play phase keybinds
+            if iskey(k,"slotstoggle") then
+                state.leveldata.slotstoggle = not state.leveldata.slotstoggle
+            end
+            if iskey(k,"menuup") then
+                if (state.leveldata.slotstoggle == false and state.leveldata.board_cursor_y > 1) then
+                    state.leveldata.board_cursor_y = state.leveldata.board_cursor_y - 1
+                end
+            end
+            if iskey(k,"menudown") then
+                if (state.leveldata.slotstoggle == false and state.leveldata.board_cursor_y < state.leveldata.breadth) then
+                    state.leveldata.board_cursor_y = state.leveldata.board_cursor_y + 1
+                end
+            end
+            if iskey(k,"menuleft") then
+                if (state.leveldata.slotstoggle == false) then
+                    if state.leveldata.board_cursor_x > 1 then
+                    state.leveldata.board_cursor_x = state.leveldata.board_cursor_x - 1
+                    end
+                elseif (state.leveldata.slots_cursor_x > 1) then
+                    state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x - 1
+                end
+            end
+            if iskey(k,"menuright") then
+                if (state.leveldata.slotstoggle == false) then
+                    if state.leveldata.selection_cursor_x < state.leveldata.length then
+                    state.leveldata.board_cursor_x = state.leveldata.board_cursor_x + 1
+                    end
+                elseif (state.leveldata.slots_cursor_x < state.playerdata.max_slots) then
+                    state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x + 1
+                end
+            end
+            if iskey(k,"menuselect") then
+                if (state.leveldata.slots_cursor_x <= array.size(state.leveldata.CHOSEN_TOWERS)) then -- attempt to place a tower
+                    local tid = array.get(state.leveldata.CHOSEN_TOWERS,state.leveldata.slots_cursor_x)
+                    if (state.leveldata.mana >= t_c_t.cost(tid)) then -- can afford the tower...
+                        local x, y = state.leveldata.board_cursor_x, state.leveldata.board_cursor_y
+                        local obstructed = false
+                        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
+                            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+                            if (t.x == x) and (t.y == y) then
+                                -- todo: handling obstructions more nuancedly-- some towers may only obstruct some others
+                                obstructed = true
+                                break
+                            end
+                        end
+                        if (not obstructed) then
+                            -- place tower
+                            state.leveldata.mana = state.leveldata.mana - t_c_t.cost(tid)
+                            local a = t_c_t.get(tid)(state,x,y,t_c_t.mods(tid))
+                            array.append(state.leveldata.TOWER_ARRAY,a)
+                        end
+                    end
                 end
             end
         end

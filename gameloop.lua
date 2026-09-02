@@ -39,11 +39,6 @@ local p_c_t = require("data/projectile/projectile_class_table")
 local cam = require("camera")
 local locked = require("data/menu/locked")
 
-function place_tower(state,x,y,tid)
-    local a = t_c_t.get(tid)(state,x,y,t_c_t.mods(tid))
-    array.append(state.leveldata.TOWER_ARRAY,a)
-end
-
 function updategaming(state)
     if (state.leveldata.phase == "select") then
         if ((state.leveldata.camera_locked == true) and state.leveldata.camerax > -5) then
@@ -62,16 +57,6 @@ function updategaming(state)
     end
 
     if (state.leveldata.phase == "play") then
-        -- test
-
-        if array.size(state.leveldata.TOWER_ARRAY) < 1 then -- test tower
-            for i = 1, state.leveldata.length do
-                for j = 1, state.leveldata.breadth do
-                    place_tower(state,i,j,"shooter")
-                end
-            end
-        end
-
         -- tick timer, check if next wave should spawn
         state.leveldata.timer = state.leveldata.timer + 1
         state.leveldata.wavetimer = state.leveldata.wavetimer + 1
@@ -298,7 +283,15 @@ function drawgaming(state)
             local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
             love.graphics.draw(t_c_t.slot_sprite(str),x*slotwidth,0,0,slotwidth/128,slotwidth/128)
         end
+        -- cursors
+        if state.leveldata.slotstoggle then love.graphics.setColor(0.4,0.25,0) else love.graphics.setColor(0.8,0.5,0) end
+        love.graphics.rectangle("line",(-cx + state.leveldata.board_cursor_x - 1)*ZOOMED_SCALE_FACTOR, (-cy + state.leveldata.board_cursor_y - 1) * ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR)
+        if state.leveldata.slotstoggle then love.graphics.setColor(0.8,0.5,0) else love.graphics.setColor(0.4,0.25,0) end
+        love.graphics.rectangle("line",(state.leveldata.slots_cursor_x - 1)* slotwidth,0,slotwidth,slotwidth)
         
+        love.graphics.setColor(1,1,1)
+        love.graphics.print("Mana: " .. state.leveldata.mana, 2*w/3,6)
+
 
         -- winloss overlay
         if (state.leveldata.phase == "win") then
