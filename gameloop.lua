@@ -289,14 +289,14 @@ function drawgaming(state)
         end
 
         -- display slots/ui
-        
         love.graphics.setColor(0.2,0,0.2)
-        love.graphics.rectangle("fill",0,0,w,slotwidth)
+        love.graphics.rectangle("fill",0,0,w,slotwidth) -- selected towers bar
+        love.graphics.setColor(1,1,1)
 
-        love.graphics.setColor(0.7,0.7,0.7)
         for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
-            local spr = array.get(state.leveldata.CHOSEN_TOWERS, i).sprite
-            love.graphics.rectangle("fill",0,0,w/9,slotwidth)
+            local str = array.get(state.leveldata.CHOSEN_TOWERS,i)
+            local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
+            love.graphics.draw(t_c_t.slot_sprite(str),x*slotwidth,0,0,slotwidth/128,slotwidth/128)
         end
         
 
