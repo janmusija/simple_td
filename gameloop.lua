@@ -40,6 +40,9 @@ local cam = require("camera")
 local locked = require("data/menu/locked")
 
 function updategaming(state)
+    if (state.leveldata.spawn_cooldown == nil) then
+        state.leveldata.spawn_cooldown = 0
+    end
     if (state.leveldata.phase == "select") then
         if ((state.leveldata.camera_locked == true) and state.leveldata.camerax > -5) then
             state.leveldata.camerax = state.leveldata.camerax - state.leveldata.camera_pan_velocity
@@ -60,21 +63,29 @@ function updategaming(state)
         -- tick timer, check if next wave should spawn
         state.leveldata.timer = state.leveldata.timer + 1
         state.leveldata.wavetimer = state.leveldata.wavetimer + 1
+        if (state.leveldata.spawn_cooldown > 0) then state.leveldata.spawn_cooldown = state.leveldata.spawn_cooldown - 1 end
+        if (state.leveldata.passive_mana == true) then
+            if (state.leveldata.time_till_next_passive_mana > 0) then state.leveldata.time_till_next_passive_mana = state.leveldata.time_till_next_passive_mana - 1 else
+                state.leveldata.time_till_next_passive_mana = state.leveldata.ticks_per_passive_mana
+                state.leveldata.mana = state.leveldata.mana + 1
+            end
+        end
 
         
-        --print(state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
+        --print(state.leveldata.wave, state.leveldata.timer, state.leveldata.wavetimer, state.leveldata.budget, state.leveldata.__minwp)
 
-        if (state.leveldata.wave < state.leveldata.waves and state.leveldata.wavetimer >= 2*60 and ( -- The least time between two waves is 2 seconds.
-            state.leveldata.wavetimer >= 20*60 or -- the longest a wave is allowed to go before spawning the next is 20 seconds.
-            (state.leveldata.wave > 0 and array.size(state.leveldata.ENEMY_ARRAY) == 0 and state.leveldata.budget < state.leveldata.__minwp) or -- if all enemies in a wave are destroyed, the next wave can spawn.
+        if (state.leveldata.wave < state.leveldata.waves and state.leveldata.budget < state.leveldata.__minwp and state.leveldata.wavetimer >= 2*60 and ( -- The least time between two waves is 2 seconds.
+            (state.leveldata.wave > 0 and state.leveldata.wavetimer >= 20*60) or -- the longest a wave is allowed to go before spawning the next is 20 seconds.
+            (state.leveldata.wave > 0 and array.size(state.leveldata.ENEMY_ARRAY) == 0) or -- if all enemies in a wave are destroyed, the next wave can spawn.
+            (state.leveldata.wave == 0 and state.leveldata.wavetimer >= state.leveldata.initial_wait) or -- initial wait
             false)) then --  additional conditions for spawning a wave early TBA
             
             state.leveldata.wavetimer = 0
             state.leveldata.wave = state.leveldata.wave + 1
             if (type(state.leveldata.wavepoint_scaling) == "number") then
-                state.leveldata.budget = state.leveldata.budget + state.leveldata.initial_wavepoints + state.leveldata.wavepoint_scaling * (state.leveldata.wave -1)
+                state.leveldata.budget = state.leveldata.initial_wavepoints + state.leveldata.wavepoint_scaling * (state.leveldata.wave -1)
             elseif (type(state.leveldata.wavepoint_scaling) == "function") then
-                state.leveldata.budget = state.leveldata.budget + state.leveldata.wavepoint_scaling(state.leveldata.wave)
+                state.leveldata.budget = state.leveldata.wavepoint_scaling(state.leveldata.wave)
             end
         end
 
@@ -137,7 +148,7 @@ function updategaming(state)
         end
 
         -- spawn enemies
-        if (state.leveldata.budget >= state.leveldata.__minwp) then
+        if (state.leveldata.budget >= state.leveldata.__minwp and state.leveldata.spawn_cooldown <= 0) then
             -- select enemy
             local enid = get_enemy(state,state.leveldata.budget)
             -- attempt to spawn it
@@ -150,6 +161,8 @@ function updategaming(state)
                 array.append(state.leveldata.ENEMY_ARRAY,a)
 
                 state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
+
+                state.leveldata.spawn_cooldown = math.random(10,30)
             else 
                 print("Error: failed to spawn!")
             end

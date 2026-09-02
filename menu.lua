@@ -13,6 +13,7 @@ function updatemenu(state)
         state["cursor"] = 1
     end
     if state["menuentryflag"] then
+        locked.updateLocks(state)
         state["menuentryflag"] = false
         if entryfuncs[state["menu"]] then
             entryfuncs[state["menu"]](state)

@@ -7,7 +7,7 @@ function Mana_Orb:new(state,x,y,mods)
     Mana_Orb.super.new(self,state,x,y,mods) -- common tower initialization
     self.sprite = mods.sprite or love.graphics.newImage("sprite/tower/mana_orb.png")
     self.production_size = mods.production_size or 10 -- produce mana in packets of this size
-    self.production_period = mods.production_period or 17*60 -- in seconds
+    self.production_period = mods.production_period or 19*60 -- in seconds
     self.tick_countdown = mods.tick_countdown or 5*60 -- first packet of mana produced in 5 seconds
     -- yes, I chose these values arbitrarily. they are subject to change
 end

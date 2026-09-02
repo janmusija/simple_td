@@ -2,7 +2,7 @@
   "enemies": {"cube": true},
   "initial_wavepoints": 2,
   "wavepoint_scaling": 1,
-  "waves": 6,
+  "waves": 7,
   "initial_mana": 40,
   "breadth": 1,
   "exitmenu": "c1world1"

@@ -84,6 +84,8 @@ local function initialize_level (state,id)
     state.leveldata.budget = 0
     state.leveldata.timer = 0
 
+    state.leveldata.initial_wait = state.leveldata.initial_wait or 30*60 -- initial wait in ticks
+
 
     state.leveldata.CHOSEN_TOWERS = array.new()
     state.leveldata.ENEMY_ARRAY = array.new()
@@ -97,7 +99,7 @@ local function initialize_level (state,id)
     state.leveldata.camera_locked = true
     state.leveldata.camera_pan_velocity = 0.1
 
-    state.leveldata.board_cursor_x = 1
+    state.leveldata.board_cursor_x = state.leveldata.length
     state.leveldata.selection_cursor_x = 1
     state.leveldata.board_cursor_y = 1
     state.leveldata.selection_cursor_y = 1
@@ -106,6 +108,10 @@ local function initialize_level (state,id)
     state.leveldata.slotstoggle = false -- is the cursor on slots or selection?
 
     state.leveldata.mana = state.leveldata.initial_mana or 40
+
+    if (state.leveldata.passive_mana == nil) then state.leveldata.passive_mana = true end
+    state.leveldata.ticks_per_passive_mana = state.leveldata.ticks_per_passive_mana or 15*6
+    state.leveldata.time_till_next_passive_mana = state.leveldata.ticks_per_passive_mana
 
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed

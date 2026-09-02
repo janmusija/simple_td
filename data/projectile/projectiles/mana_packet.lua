@@ -19,7 +19,7 @@ function Mana_Packet:update(state)
     if (self.lifetime <= 0) then
         self.alive = false
     end
-    if (math.abs(self.x - state.leveldata.board_cursor_x+0.5) <= 0.5) and (math.abs(self.y - state.leveldata.board_cursor_y+0.5) <= 0.5) and self.alive then
+    if (math.abs(self.x - state.leveldata.board_cursor_x+0.5) <= 1) and (math.abs(self.y - state.leveldata.board_cursor_y+0.5) <= 1) and self.alive then
         self.alive = false
         state.leveldata.mana = state.leveldata.mana + self.mv
     end

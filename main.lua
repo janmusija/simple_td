@@ -68,6 +68,7 @@ local state = {
         enemy_weights (optional, defaults per-enemy) -> weights of enemies-- how likely they are to spawn when the budget allows them. 
         enemy_wavepoints (optional, defaults per-enemy) -> wavepoints of enemies -- how much of the budget the enemy takes
         initial_mana -> initial mana budget
+        initial_wait -> time in ticks before first wave spawns
         initial_wavepoints -> wavepoints in beginning of level
         wavepoint_scaling -> either a numeric value (constant number of wavepoints added per wave) or a function which maps wave number to wavepoints in that wave (in which case "initial_wavepoints" is ignored)
         waves -> number of waves
@@ -195,7 +196,6 @@ function love.keypressed(k)
             state["menu"] = menutree[state["menu"]][state["cursor"]]
             state["menuentryflag"] = true
             state["cursor"] = 1
-            locked.updateLocks(state) -- likely overzealous
         end
         if iskey(k,"menuquit") then state["menu"] = "quit"
             state["menuentryflag"] = true end
