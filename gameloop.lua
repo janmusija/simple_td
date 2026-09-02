@@ -290,7 +290,8 @@ function drawgaming(state)
         love.graphics.rectangle("line",(state.leveldata.slots_cursor_x - 1)* slotwidth,0,slotwidth,slotwidth)
         
         love.graphics.setColor(1,1,1)
-        love.graphics.print("Mana: " .. state.leveldata.mana, 2*w/3,6)
+        love.graphics.setFont(font18)
+        love.graphics.print("Mana: " .. state.leveldata.mana, 2*w/3,6) -- placeholder
 
 
         -- winloss overlay

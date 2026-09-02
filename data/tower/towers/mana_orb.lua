@@ -21,7 +21,7 @@ function Mana_Orb:update(state)
     else
         self.tick_countdown = self.production_period
         local m = {mv = self.production_size}
-        self:fire_projectile(state,"mana_packet",0,1/3,m)
+        self:fire_projectile(state,"mana_packet",0,-1/3,m)
     end
 end
 
