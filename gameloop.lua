@@ -305,7 +305,6 @@ function drawgaming(state)
             love.graphics.draw(t_c_t.slot_sprite(str),x*slotwidth,0,0,slotwidth/128,slotwidth/128)
             love.graphics.setColor(0,0,0,0.2)
             if (state.leveldata.CHOSEN_TOWER_COOLDOWNS and state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] and state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] > 0 and t_c_t.recharge(str) > 0) then
-                print(state.leveldata.CHOSEN_TOWER_COOLDOWNS[i], t_c_t.recharge(str))
                 love.graphics.rectangle("fill",x*slotwidth,0,slotwidth,(slotwidth)*(state.leveldata.CHOSEN_TOWER_COOLDOWNS[i]/t_c_t.recharge(str)))
             end
         end
