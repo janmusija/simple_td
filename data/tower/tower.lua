@@ -1,7 +1,5 @@
 local Object = require("classic")
 
-local array = require("array")
-
 local Tower = Object:extend()
 
 --[[ members of instances:
@@ -65,8 +63,8 @@ end
 
 function Tower:valid_forward_target(state)
     local out = false
-    for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
-        local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+    for i = 1, #state.leveldata.ENEMY_ARRAY do
+        local en = state.leveldata.ENEMY_ARRAY[i]
         if (math.abs(en.y - self.y) < 0.5 and en.x < self.x - 0.5) then 
             out = true
             break
@@ -85,7 +83,7 @@ function Tower:fire_projectile(state,projid,velocityx,velocityy,modoverride)
     else
         p = p_c_t.get(projid)(state,self.x,self.y,velocityx,velocityy,p_c_t.mods(projid))
     end
-    array.append(state.leveldata.PROJECTILE_ARRAY,p)
+    table.insert(state.leveldata.PROJECTILE_ARRAY,p)
 end
 
 return Tower

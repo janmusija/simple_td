@@ -1,6 +1,5 @@
 local Object = require("classic")
 local cam = require("camera")
-local array = require("array")
 
 local Enemy = Object:extend()
 --[[ members of instances:
@@ -82,8 +81,8 @@ function Enemy:update(state)
         end
         -- if blocked: attack. TK
         local blocked = false
-        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
-            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+        for i = 1, #state.leveldata.TOWER_ARRAY do
+            local t = state.leveldata.TOWER_ARRAY[i]
             local xdist = self.x - t.x
             local ydist = self.y - t.y
             if (xdist < 0.25 and xdist > -0.35 and math.abs(ydist) <0.5 ) then

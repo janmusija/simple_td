@@ -32,7 +32,6 @@ local function get_enemy(state,budget)
     return out
 end
 
-local array = require("array")
 local e_c_t = require("data/enemy/enemy_class_table")
 local t_c_t = require("data/tower/tower_class_table")
 local p_c_t = require("data/projectile/projectile_class_table")
@@ -76,7 +75,7 @@ function updategaming(state)
 
         if (state.leveldata.wave < state.leveldata.waves and state.leveldata.budget < state.leveldata.__minwp and state.leveldata.wavetimer >= 2*60 and ( -- The least time between two waves is 2 seconds.
             (state.leveldata.wave > 0 and state.leveldata.wavetimer >= 20*60) or -- the longest a wave is allowed to go before spawning the next is 20 seconds.
-            (state.leveldata.wave > 0 and array.size(state.leveldata.ENEMY_ARRAY) == 0) or -- if all enemies in a wave are destroyed, the next wave can spawn.
+            (state.leveldata.wave > 0 and #state.leveldata.ENEMY_ARRAY == 0) or -- if all enemies in a wave are destroyed, the next wave can spawn.
             (state.leveldata.wave == 0 and state.leveldata.wavetimer >= state.leveldata.initial_wait) or -- initial wait
             false)) then --  additional conditions for spawning a wave early TBA
             
@@ -95,31 +94,31 @@ function updategaming(state)
         -- destroy enemies, projectiles, and towers that are no longer alive
         do
             local i = 1
-            while i <= array.size(state.leveldata.ENEMY_ARRAY) do
-                local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+            while i <= #state.leveldata.ENEMY_ARRAY do
+                local en = state.leveldata.ENEMY_ARRAY[i]
                 if en.alive == false then
                     en:destroy(state)
-                    array.delete(state.leveldata.ENEMY_ARRAY,i)
+                    table.remove(state.leveldata.ENEMY_ARRAY,i)
                 else
                     i = i+1
                 end
             end
             i = 1
-            while i <= array.size(state.leveldata.PROJECTILE_ARRAY) do
-                local en = array.get(state.leveldata.PROJECTILE_ARRAY,i)
+            while i <= #state.leveldata.PROJECTILE_ARRAY do
+                local en = state.leveldata.PROJECTILE_ARRAY[i]
                 if en.alive == false then
                     en:destroy(state)
-                    array.delete(state.leveldata.PROJECTILE_ARRAY,i)
+                    table.remove(state.leveldata.PROJECTILE_ARRAY,i)
                 else
                     i = i+1
                 end
             end
             i = 1
-            while i <= array.size(state.leveldata.TOWER_ARRAY) do
-                local en = array.get(state.leveldata.TOWER_ARRAY,i)
+            while i <= #state.leveldata.TOWER_ARRAY do
+                local en = state.leveldata.TOWER_ARRAY[i]
                 if en.alive == false then
                     en:destroy(state)
-                    array.delete(state.leveldata.TOWER_ARRAY,i)
+                    table.remove(state.leveldata.TOWER_ARRAY,i)
                 else
                     i = i+1
                 end
@@ -130,8 +129,8 @@ function updategaming(state)
         if state.leveldata.CHOSEN_TOWER_COOLDOWNS == nil then
             state.leveldata.CHOSEN_TOWER_COOLDOWNS = {}
         end
-        for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
-            local t = array.get(state.leveldata.CHOSEN_TOWERS,i)
+        for i = 1, #state.leveldata.CHOSEN_TOWERS do
+            local t = state.leveldata.CHOSEN_TOWERS[i]
             -- todo
             if state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] == nil then
                 state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] = 0
@@ -141,20 +140,20 @@ function updategaming(state)
         end
 
         -- tick towers
-        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
-            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+        for i = 1, #state.leveldata.TOWER_ARRAY do
+            local t = state.leveldata.TOWER_ARRAY[i]
             t:update(state)
         end
         
         -- tick projectiles
-        for i = 1, array.size(state.leveldata.PROJECTILE_ARRAY) do
-            local proj = array.get(state.leveldata.PROJECTILE_ARRAY,i)
+        for i = 1, #state.leveldata.PROJECTILE_ARRAY do
+            local proj = state.leveldata.PROJECTILE_ARRAY[i]
             proj:update(state)
         end
 
         -- tick enemies
-        for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
-            local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+        for i = 1, #state.leveldata.ENEMY_ARRAY do
+            local en = state.leveldata.ENEMY_ARRAY[i]
             en:update(state)
         end
 
@@ -169,7 +168,7 @@ function updategaming(state)
                 lane = math.random(1,state.leveldata.breadth)
                 local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
                 
-                array.append(state.leveldata.ENEMY_ARRAY,a)
+                table.insert(state.leveldata.ENEMY_ARRAY,a)
 
                 state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
 
@@ -181,15 +180,15 @@ function updategaming(state)
 
         -- check if level is over
         -- loss = enemy past all defenses
-        for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
-            local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+        for i = 1, #state.leveldata.ENEMY_ARRAY do
+            local en = state.leveldata.ENEMY_ARRAY[i]
             if (en.alive and en.x > state.leveldata.length + 1) then 
                 state.leveldata.phase = "loss"
                 en.alive = false
             end
         end
         -- victory = (no enemies remain, budget is zero, and we have reached the final wave)
-        if (array.size(state.leveldata.ENEMY_ARRAY) == 0 and state.leveldata.budget < state.leveldata.__minwp and state.leveldata.wave >= state.leveldata.waves) then
+        if (#state.leveldata.ENEMY_ARRAY == 0 and state.leveldata.budget < state.leveldata.__minwp and state.leveldata.wave >= state.leveldata.waves) then
             state.leveldata.phase = "win"
             state.playerdata.completed_levels[state.level] = true
         end
@@ -232,8 +231,8 @@ function drawgaming(state)
                 end
             end
 
-            for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
-                local str = array.get(state.leveldata.CHOSEN_TOWERS,i)
+            for i = 1, #state.leveldata.CHOSEN_TOWERS do
+                local str = state.leveldata.CHOSEN_TOWERS[i]
                 local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
                 love.graphics.draw(t_c_t.slot_sprite(str),x*slotwidth,0,0,slotwidth/128,slotwidth/128)
             end
@@ -274,24 +273,24 @@ function drawgaming(state)
         --love.graphics.print("omg! playing")
 
         -- display projectiles
-        for i = 1, array.size(state.leveldata.PROJECTILE_ARRAY) do
-            local proj = array.get(state.leveldata.PROJECTILE_ARRAY,i)
+        for i = 1, #state.leveldata.PROJECTILE_ARRAY do
+            local proj = state.leveldata.PROJECTILE_ARRAY[i]
             if proj.alive then
                 proj:draw(state)
             end
         end
 
         -- display towers
-        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
-            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+        for i = 1, #state.leveldata.TOWER_ARRAY do
+            local t = state.leveldata.TOWER_ARRAY[i]
             if t.alive then
                 t:draw(state)
             end
         end
         
         -- display enemies
-        for i = 1, array.size(state.leveldata.ENEMY_ARRAY) do
-            local en = array.get(state.leveldata.ENEMY_ARRAY,i)
+        for i = 1, #state.leveldata.ENEMY_ARRAY do
+            local en = state.leveldata.ENEMY_ARRAY[i]
             if en.alive then
                 en:draw(state)
             end
@@ -301,9 +300,9 @@ function drawgaming(state)
         love.graphics.setColor(0.2,0,0.2)
         love.graphics.rectangle("fill",0,0,w,slotwidth) -- selected towers bar
 
-        for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
+        for i = 1, #state.leveldata.CHOSEN_TOWERS do
             love.graphics.setColor(1,1,1)
-            local str = array.get(state.leveldata.CHOSEN_TOWERS,i)
+            local str = state.leveldata.CHOSEN_TOWERS[i]
             local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
             love.graphics.draw(t_c_t.slot_sprite(str),x*slotwidth,0,0,slotwidth/128,slotwidth/128)
             love.graphics.setColor(0,0,0,0.2)

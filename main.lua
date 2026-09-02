@@ -5,7 +5,6 @@ local menu = require("menu")
 local Object = require("classic") -- https://github.com/rxi/classic/blob/master/classic.lua
 local Button = require("ui/button")
 local sl = require("save_load")
-local array = require("array")
 
 local td_constants = require("data/td_constants")
 
@@ -220,24 +219,24 @@ function love.keypressed(k)
             if iskey(k, "menuselect") then
                 if (state.leveldata.slotstoggle) then
                     -- currently on slots. deselect this slot
-                    if array.size(state.leveldata.CHOSEN_TOWERS) >= state.leveldata.slots_cursor_x then
-                        array.delete_shift(state.leveldata.CHOSEN_TOWERS,state.leveldata.slots_cursor_x)
+                    if #state.leveldata.CHOSEN_TOWERS >= state.leveldata.slots_cursor_x then
+                        table.remove(state.leveldata.CHOSEN_TOWERS,state.leveldata.slots_cursor_x)
                     end
                 else
                     local tid = state.leveldata.selection_cursor_x + 9* (state.leveldata.selection_cursor_y - 1)
                     -- currently on selection. add this to slots if unlocked and space exists
-                    if array.size(state.leveldata.CHOSEN_TOWERS) < state.playerdata.max_slots and -- space exists
+                    if #state.leveldata.CHOSEN_TOWERS < state.playerdata.max_slots and -- space exists
                     t_c_t.number_table[tid] ~= nil and -- and there is a thing to select at all
                     locked.unlocked("tower_" .. t_c_t.number_table[tid]) or (type(state.leveldata.forceunlocks) == "table" and state.leveldata.forceunlocks[t_c_t.number_table[tid]] == true) -- unlocked
                     then
                         local alreadychosen = false
-                        for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
-                            if t_c_t.number_table[tid] == array.get(state.leveldata.CHOSEN_TOWERS,i) then
+                        for i = 1, #state.leveldata.CHOSEN_TOWERS do
+                            if t_c_t.number_table[tid] == state.leveldata.CHOSEN_TOWERS[i] then
                                 alreadychosen = true
                                 break
                             end
                         end
-                        if not alreadychosen then array.append(state.leveldata.CHOSEN_TOWERS,t_c_t.number_table[tid]) end
+                        if not alreadychosen then table.insert(state.leveldata.CHOSEN_TOWERS,t_c_t.number_table[tid]) end
                     end
                 end
             end
@@ -298,21 +297,21 @@ function love.keypressed(k)
                     if state.leveldata.board_cursor_x < state.leveldata.length then
                     state.leveldata.board_cursor_x = state.leveldata.board_cursor_x + 1
                     end
-                elseif (state.leveldata.slots_cursor_x < array.size(state.leveldata.CHOSEN_TOWERS)) then
+                elseif (state.leveldata.slots_cursor_x < #state.leveldata.CHOSEN_TOWERS) then
                     state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x + 1
                 end
             end
             for i = 1, 10 do
                 if iskey(k, "select_slot_" .. i) then
-                    if (i <= array.size(state.leveldata.CHOSEN_TOWERS)) then
+                    if (i <= #state.leveldata.CHOSEN_TOWERS) then
                         state.leveldata.slots_cursor_x = i
                     end
                 end
             end
             if iskey(k,"menuselect") then
-                if (state.leveldata.slots_cursor_x <= array.size(state.leveldata.CHOSEN_TOWERS)) then -- attempt to place a tower
+                if (state.leveldata.slots_cursor_x <= #state.leveldata.CHOSEN_TOWERS) then -- attempt to place a tower
                     local scx = state.leveldata.slots_cursor_x
-                    local tid = array.get(state.leveldata.CHOSEN_TOWERS,scx)
+                    local tid = state.leveldata.CHOSEN_TOWERS[scx]
                     if (state.leveldata.CHOSEN_TOWER_COOLDOWNS == nil) then
                         state.leveldata.CHOSEN_TOWER_COOLDOWNS = {}
                     end
@@ -323,8 +322,8 @@ function love.keypressed(k)
                         state.leveldata.CHOSEN_TOWER_COOLDOWNS[scx] <= 0) then -- can afford the tower...
                         local x, y = state.leveldata.board_cursor_x, state.leveldata.board_cursor_y
                         local obstructed = false
-                        for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
-                            local t = array.get(state.leveldata.TOWER_ARRAY,i)
+                        for i = 1, #state.leveldata.TOWER_ARRAY do
+                            local t = state.leveldata.TOWER_ARRAY[i]
                             if (t.x == x) and (t.y == y) then
                                 -- todo: handling obstructions more nuancedly-- some towers may only obstruct some others
                                 obstructed = true
@@ -336,7 +335,7 @@ function love.keypressed(k)
                             state.leveldata.mana = state.leveldata.mana - t_c_t.cost(tid)
                             state.leveldata.CHOSEN_TOWER_COOLDOWNS[scx] = t_c_t.recharge(tid)
                             local a = t_c_t.get(tid)(state,x,y,t_c_t.mods(tid))
-                            array.append(state.leveldata.TOWER_ARRAY,a)
+                            table.insert(state.leveldata.TOWER_ARRAY,a)
                         end
                     end
                 end

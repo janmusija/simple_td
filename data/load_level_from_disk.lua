@@ -43,8 +43,6 @@ local function int_from_string_bad(str)
     return out
 end
 
-local array = require("array")
-
 local function initialize_level (state,id)
     state.leveldata = nil -- destroy any potentially existing data about other levels.
     local location = locate_level_file(id)
@@ -87,10 +85,10 @@ local function initialize_level (state,id)
     state.leveldata.initial_wait = state.leveldata.initial_wait or 30*60 -- initial wait in ticks
 
 
-    state.leveldata.CHOSEN_TOWERS = array.new()
-    state.leveldata.ENEMY_ARRAY = array.new()
-    state.leveldata.TOWER_ARRAY = array.new()
-    state.leveldata.PROJECTILE_ARRAY = array.new()
+    state.leveldata.CHOSEN_TOWERS = {}
+    state.leveldata.ENEMY_ARRAY = {}
+    state.leveldata.TOWER_ARRAY = {}
+    state.leveldata.PROJECTILE_ARRAY = {}
 
     --state.leveldata.camerax = -0.5
     state.leveldata.camerax = state.leveldata.length
