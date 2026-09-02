@@ -40,6 +40,8 @@ t_c_t.special_slot_sprite_locations = {}
 
 t_c_t.special_costs = {}
 
+t_c_t.special_recharges = {}
+
 t_c_t.slot_sprite = function(id)
     if t_c_t.special_slot_sprite_locations[id] then
         return love.graphics.newImage(t_c_t.special_slot_sprite_locations[id])
@@ -53,6 +55,14 @@ t_c_t.cost = function(id)
         return t_c_t.special_costs[id]
     else
         return t_c_t.table[id].manacost
+    end
+end
+
+t_c_t.recharge = function(id)
+    if t_c_t.special_recharges[id] then
+        return t_c_t.special_recharges[id]
+    else
+        return t_c_t.table[id].recharge
     end
 end
 

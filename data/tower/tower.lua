@@ -33,7 +33,7 @@ function Tower:new(state,x,y,mods)
     self.alive = true
 end
 
-Tower.recharge = 5
+Tower.recharge = 5*60
 Tower.manacost = 0
 
 

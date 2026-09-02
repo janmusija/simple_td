@@ -304,8 +304,16 @@ function love.keypressed(k)
             end
             if iskey(k,"menuselect") then
                 if (state.leveldata.slots_cursor_x <= array.size(state.leveldata.CHOSEN_TOWERS)) then -- attempt to place a tower
-                    local tid = array.get(state.leveldata.CHOSEN_TOWERS,state.leveldata.slots_cursor_x)
-                    if (state.leveldata.mana >= t_c_t.cost(tid)) then -- can afford the tower...
+                    local scx = state.leveldata.slots_cursor_x
+                    local tid = array.get(state.leveldata.CHOSEN_TOWERS,scx)
+                    if (state.leveldata.CHOSEN_TOWER_COOLDOWNS == nil) then
+                        state.leveldata.CHOSEN_TOWER_COOLDOWNS = {}
+                    end
+                    if (state.leveldata.CHOSEN_TOWER_COOLDOWNS[scx] == nil) then
+                        state.leveldata.CHOSEN_TOWER_COOLDOWNS[scx] = 0
+                    end
+                    if (state.leveldata.mana >= t_c_t.cost(tid) and
+                        state.leveldata.CHOSEN_TOWER_COOLDOWNS[scx] <= 0) then -- can afford the tower...
                         local x, y = state.leveldata.board_cursor_x, state.leveldata.board_cursor_y
                         local obstructed = false
                         for i = 1, array.size(state.leveldata.TOWER_ARRAY) do
@@ -319,6 +327,7 @@ function love.keypressed(k)
                         if (not obstructed) then
                             -- place tower
                             state.leveldata.mana = state.leveldata.mana - t_c_t.cost(tid)
+                            state.leveldata.CHOSEN_TOWER_COOLDOWNS[scx] = t_c_t.recharge(tid)
                             local a = t_c_t.get(tid)(state,x,y,t_c_t.mods(tid))
                             array.append(state.leveldata.TOWER_ARRAY,a)
                         end

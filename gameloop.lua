@@ -124,9 +124,17 @@ function updategaming(state)
         end
 
         -- tick selected towers slots
+        if state.leveldata.CHOSEN_TOWER_COOLDOWNS == nil then
+            state.leveldata.CHOSEN_TOWER_COOLDOWNS = {}
+        end
         for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
             local t = array.get(state.leveldata.CHOSEN_TOWERS,i)
             -- todo
+            if state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] == nil then
+                state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] = 0
+            elseif  state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] > 0 then
+                state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] = state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] - 1
+            end
         end
 
         -- tick towers
@@ -289,12 +297,17 @@ function drawgaming(state)
         -- display slots/ui
         love.graphics.setColor(0.2,0,0.2)
         love.graphics.rectangle("fill",0,0,w,slotwidth) -- selected towers bar
-        love.graphics.setColor(1,1,1)
 
         for i = 1, array.size(state.leveldata.CHOSEN_TOWERS) do
+            love.graphics.setColor(1,1,1)
             local str = array.get(state.leveldata.CHOSEN_TOWERS,i)
             local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
             love.graphics.draw(t_c_t.slot_sprite(str),x*slotwidth,0,0,slotwidth/128,slotwidth/128)
+            love.graphics.setColor(0,0,0,0.2)
+            if (state.leveldata.CHOSEN_TOWER_COOLDOWNS and state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] and state.leveldata.CHOSEN_TOWER_COOLDOWNS[i] > 0 and t_c_t.recharge(str) > 0) then
+                print(state.leveldata.CHOSEN_TOWER_COOLDOWNS[i], t_c_t.recharge(str))
+                love.graphics.rectangle("fill",x*slotwidth,0,slotwidth,(slotwidth)*(state.leveldata.CHOSEN_TOWER_COOLDOWNS[i]/t_c_t.recharge(str)))
+            end
         end
         -- cursors
         if state.leveldata.slotstoggle then love.graphics.setColor(0.4,0.25,0) else love.graphics.setColor(0.8,0.5,0) end
