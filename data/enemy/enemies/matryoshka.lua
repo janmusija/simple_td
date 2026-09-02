@@ -20,7 +20,7 @@ function Matryoshka:destroy(state)
     -- [create a new matryoshka]
     if self.size > 1 then
     local m = Matryoshka(state,self.y)
-    m.stunframes = 10
+    m.stunframes = 60
     m.x = self.x
     m.size = self.size - 1
     array.append(state.leveldata.ENEMY_ARRAY,m)

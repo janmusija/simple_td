@@ -19,6 +19,17 @@ return {
         zoomout = "o", -- zoom camera out
         zoomreset = "=", -- reset zoom
         hideselection = "h", -- hide selection screen (to pan around map)
-        slotstoggle = "t" -- toggle between slots and board/selection
+        slotstoggle = "t", -- toggle between slots and board/selection
+
+        select_slot_1 = "1",
+        select_slot_2 = "2",
+        select_slot_3 = "3",
+        select_slot_4 = "4",
+        select_slot_5 = "5",
+        select_slot_6 = "6",
+        select_slot_7 = "7",
+        select_slot_8 = "8",
+        select_slot_9 = "9",
+        select_slot_10 = "0",
     }
 }

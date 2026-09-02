@@ -137,7 +137,7 @@ local function updatecamera(state)
 end
 
 function love.update(dt)
-    accumulator = accumulator + dt
+    accumulator = math.min(accumulator + dt,spf*2)
     if accumulator >= spf then 
         local s = state[""]
         if s == "menu" then
@@ -300,6 +300,13 @@ function love.keypressed(k)
                     end
                 elseif (state.leveldata.slots_cursor_x < array.size(state.leveldata.CHOSEN_TOWERS)) then
                     state.leveldata.slots_cursor_x = state.leveldata.slots_cursor_x + 1
+                end
+            end
+            for i = 1, 10 do
+                if iskey(k, "select_slot_" .. i) then
+                    if (i <= array.size(state.leveldata.CHOSEN_TOWERS)) then
+                        state.leveldata.slots_cursor_x = i
+                    end
                 end
             end
             if iskey(k,"menuselect") then
