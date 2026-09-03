@@ -106,6 +106,7 @@ function love.load() -- when game opens
     love.profiler = require('profile') 
     love.profiler.start()
     end
+    love.keyboard.setKeyRepeat(true)
     love.window.setTitle( "Tower defense (could use balancing)" )
     math.randomseed(os.time())
     local seed = math.random(0,16777215)
@@ -188,6 +189,12 @@ local tile_type_map = require("data/tile_types")
 
 function love.keypressed(k)
     local s = state[""]
+    if state.wants_text_input then
+        if k == "enter" then
+            state.wants_text_input = nil
+            state.text_input_ready = true
+        end
+    end
     if s == "pause" then
         -- keybinds when paused)
         if state.leveldata.want_to_quit ~= nil then
@@ -402,5 +409,15 @@ function love.keypressed(k)
             state.leveldata.camerazoom = 1.0
         end
         if iskey(k,"pause") then state[""] = "pause" end
+    end
+end
+
+function love.textinput(t)
+    if state.wants_text_input then
+        if state.input_string == nil then
+            state.input_string = t
+        else
+        state.input_string = state.input_string
+        end
     end
 end
