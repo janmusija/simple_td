@@ -9,7 +9,7 @@ function Bolt:new(state,x,y,velocityx,velocityy,mods)
     self.dmg = mods.dmg or 2
     self.damagestowers = mods.damagestowers or false
     self.damagesenemies = mods.damagesenemies or true
-    self.hitboxradius = 0.2
+    self.hitboxradius = mods.hitboxradius or 0.2
 end
 
 Bolt.sprite = love.graphics.newImage("sprite/projectile/bolt.png")

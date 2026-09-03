@@ -9,6 +9,8 @@ function Cube:new(state,y,mods)
     self.hp = mods.hp or 20
 end
 
+Cube.compatible_tiles = {normal = true, water = true}
+
 Cube.weight = 4
 Cube.sprite = love.graphics.newImage("sprite/enemy/cube.png")
 

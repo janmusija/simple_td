@@ -1,5 +1,6 @@
 local Bolt = require("data/projectile/projectiles/bolt")
 local Mana_Packet = require("data/projectile/projectiles/mana_packet")
+local Pellet = require("data/projectile/projectiles/pellet")
 
 local p_c_t = {}
 
@@ -29,7 +30,8 @@ end
 
 
 p_c_t.table = {
-    bolt = {__typ = Bolt, sprite = love.graphics.newImage("sprite/projectile/bolt.png")},
+    bolt = Bolt,
+    pellet = Pellet,
     mana_packet = Mana_Packet
 }
 

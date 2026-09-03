@@ -33,6 +33,7 @@ end
 
 local sl = require("save_load")
 local e_c_t = require("data/enemy/enemy_class_table")
+local tile_types = require("data/tile_types")
 
 local function int_from_string_bad(str)
     local out = 0
@@ -82,7 +83,7 @@ local function initialize_level (state,id)
     state.leveldata.budget = 0
     state.leveldata.timer = 0
 
-    state.leveldata.initial_wait = state.leveldata.initial_wait or 30*60 -- initial wait in ticks
+    state.leveldata.initial_wait = state.leveldata.initial_wait or 35*60 -- initial wait in ticks
 
 
     state.leveldata.CHOSEN_TOWERS = {}
@@ -120,9 +121,13 @@ local function initialize_level (state,id)
         for j = 1, state.leveldata.breadth do
             if state.leveldata.grid and state.leveldata.grid[j] and #state.leveldata.grid[j] >=i then
                 local tile_type = string.sub(state.leveldata.grid[j],i,i)
-                state.leveldata.TILE_TYPE_ARRAY[i][j] = tile_type
+                if (tile_types[tile_type]) then
+                    state.leveldata.TILE_TYPE_ARRAY[i][j] = tile_types[tile_type]
+                else
+                    state.leveldata.TILE_TYPE_ARRAY[i][j] = "normal"
+                end
             else
-                state.leveldata.TILE_TYPE_ARRAY[i][j] = "."
+                state.leveldata.TILE_TYPE_ARRAY[i][j] = "normal"
             end
         end
     end

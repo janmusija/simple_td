@@ -32,7 +32,8 @@ function Projectile:new(state,x,y,velocityx,velocityy,mods)
     self.alive = true
     self.damagestowers = mods.damagestowers or false
     self.damagesenemies = mods.damagesenemies or true
-    self.hitboxradius = 0.2
+    self.hitboxradius = mods.hitboxradius or 0.2
+    self.lifetime = mods.lifetime
 end
 
 function Projectile:destroy(state)
@@ -89,6 +90,12 @@ function Projectile:update(state)
     end
 
     self:culling(state) -- cull based on usual conditions
+    if (self.lifetime ~= nil) then
+        if (self.lifetime <= 0) then
+            self.alive = false
+        end
+        self.lifetime = self.lifetime -1
+    end
 end
 
 return Projectile

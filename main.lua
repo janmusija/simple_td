@@ -309,6 +309,25 @@ function love.keypressed(k)
                     end
                 end
             end
+            if iskey(k, "eraser") and locked.unlocked("tool_eraser") then
+                local x, y = state.leveldata.board_cursor_x, state.leveldata.board_cursor_y
+                local platf
+                local nonplatffound = false
+                for i = 1, #state.leveldata.TOWER_ARRAY do
+                    local t = state.leveldata.TOWER_ARRAY[i]
+                    if (t.x == x and t.y == y) then
+                        if (t.platform == false) then
+                            t.alive = false
+                            nonplatffound = true
+                        else
+                            platf = t
+                        end
+                    end
+                    if nonplatffound == false and platf ~= nil then
+                        platf.alive = false
+                    end
+                end
+            end
             if iskey(k,"menuselect") then
                 if (state.leveldata.slots_cursor_x <= #state.leveldata.CHOSEN_TOWERS) then -- attempt to place a tower
                     local scx = state.leveldata.slots_cursor_x
@@ -336,7 +355,7 @@ function love.keypressed(k)
                             end
                         end
                         if (not platform_exists) then
-                            if not (t_c_t.compatible_tiles(tid)[tile_type_map[state.leveldata.TILE_TYPE_ARRAY[x][y]]]) then
+                            if not (t_c_t.compatible_tiles(tid)[state.leveldata.TILE_TYPE_ARRAY[x][y]]) then
                                 obstructed = true
                             end
                         end
@@ -356,6 +375,8 @@ function love.keypressed(k)
             state["menu"] = state.leveldata.exitmenu or "main"
             state["menuentryflag"] = true
             state["cursor"] = 1
+            state.leveldata = {}
+            sl.save_player_data(state.profile,state)
         end
         if (iskey(k,"zoomin")) then
             state.leveldata.camerazoom = state.leveldata.camerazoom * 2

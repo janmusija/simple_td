@@ -166,14 +166,26 @@ function updategaming(state)
             if (enid ~= "FAILURE") then
                 -- more detailed lane selection that can blacklist certain lanes for certain enemies TBA
                 local lane = -1
-                lane = math.random(1,state.leveldata.breadth)
-                local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
-                
-                table.insert(state.leveldata.ENEMY_ARRAY,a)
+                local validlanes = {}
+                for j = 1,state.leveldata.breadth do
+                    valid = true
+                    for i = 1, state.leveldata.length do
+                        if not e_c_t.compatible_tiles(enid)[state.leveldata.TILE_TYPE_ARRAY[i][j]] then valid = false end
+                    end
+                    if valid == true then
+                        table.insert(validlanes,j)
+                    end
+                end
+                if #validlanes > 0 then
+                    lane = validlanes[math.random(1,#validlanes)]
+                    local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
+                    
+                    table.insert(state.leveldata.ENEMY_ARRAY,a)
 
-                state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
+                    state.leveldata.budget = state.leveldata.budget - state.leveldata.enemy_wavepoints[enid]
 
-                state.leveldata.spawn_cooldown = math.random(10,30)
+                    state.leveldata.spawn_cooldown = math.random(10,30)
+                end
             else 
                 print("Error: failed to spawn!")
             end
@@ -185,7 +197,6 @@ function updategaming(state)
             local en = state.leveldata.ENEMY_ARRAY[i]
             if (en.alive and en.x > state.leveldata.length + 1) then 
                 state.leveldata.phase = "loss"
-                en.alive = false
             end
         end
         -- victory = (no enemies remain, budget is zero, and we have reached the final wave)
@@ -205,7 +216,7 @@ function drawgaming(state)
     -- display background, tiles
     for j = 1, state.leveldata.breadth do
         for i = 1, state.leveldata.length do
-            local tiletype = tile_type_map[state.leveldata.TILE_TYPE_ARRAY[i][j]] or "normal"
+            local tiletype = state.leveldata.TILE_TYPE_ARRAY[i][j] or "normal"
             if (math.fmod(i+j,2) == 1) then
                 if tiletype == "air" then
                 love.graphics.setColor(0.5,0.9,0.9)
@@ -342,7 +353,7 @@ function drawgaming(state)
         love.graphics.setFont(font18)
         love.graphics.print("Mana: " .. state.leveldata.mana, 2*w/3,6) -- placeholder
         if state.leveldata.wave > 0 then
-            love.graphics.print("Wave: " .. state.leveldata.wave, 2*w/3,30) -- placeholder
+            love.graphics.print("Wave: " .. state.leveldata.wave .. "/" .. state.leveldata.waves, 2*w/3,30) -- placeholder
         end
 
 

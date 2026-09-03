@@ -30,7 +30,9 @@ e_c_t.mods = function(id)
     end
 end
 
-
+e_c_t.compatible_tiles = function(id)
+    return e_c_t.get(id).compatible_tiles
+end
 
 e_c_t.table = {
     cube = Cube,

@@ -4,6 +4,7 @@
   "wavepoint_scaling": 1,
   "waves": 7,
   "initial_mana": 40,
+  "initial_wait": 1200,
   "breadth": 1,
   "exitmenu": "c1world1"
 }

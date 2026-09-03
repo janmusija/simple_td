@@ -45,6 +45,8 @@ function Enemy:new(state,y,mods)
     if (y == -1) then self.alive = false end -- dummy
 end
 
+Enemy.compatible_tiles = {normal = true}
+
 Enemy.wavepoints = 2
 Enemy.weight = 1
 

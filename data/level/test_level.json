@@ -3,10 +3,11 @@
   "initial_wavepoints": 3,
   "wavepoint_scaling": 2,
   "waves": 60,
-  "initial_mana": 40,
+  "initial_mana": 70,
   "breadth": 6,
   "length": 12,
   "exitmenu": "campaigns",
   "forceunlocks": {"mana_orb": true},
-  "grid": [".~'_",".~'_"]
+  "grid": [".~'_",".~'_"],
+  "initial_wait": 60
 }

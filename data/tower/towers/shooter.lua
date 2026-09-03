@@ -23,7 +23,8 @@ function Shooter:update(state)
     else
         if self:valid_forward_target(state) then
             self.cooldown = self.rof
-            self:fire_projectile(state,"bolt",-5/60,0)
+            local damage_OR = {dmg = self.dps}
+            self:fire_projectile(state,"bolt",-5/60,0,damage_OR)
         end
     end
 end

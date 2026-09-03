@@ -31,5 +31,6 @@ return {
         select_slot_8 = "8",
         select_slot_9 = "9",
         select_slot_10 = "0",
+        eraser = "e"
     }
 }
