@@ -170,6 +170,7 @@ end
 
 local menutree = require("data/menu/tree")
 local t_c_t = require("data/tower/tower_class_table")
+local tile_type_map = require("data/tile_types")
 
 function love.keypressed(k)
     local s = state[""]
@@ -322,12 +323,21 @@ function love.keypressed(k)
                         state.leveldata.CHOSEN_TOWER_COOLDOWNS[scx] <= 0) then -- can afford the tower...
                         local x, y = state.leveldata.board_cursor_x, state.leveldata.board_cursor_y
                         local obstructed = false
+                        local platform_exists = false
                         for i = 1, #state.leveldata.TOWER_ARRAY do
                             local t = state.leveldata.TOWER_ARRAY[i]
                             if (t.x == x) and (t.y == y) then
-                                -- todo: handling obstructions more nuancedly-- some towers may only obstruct some others
-                                obstructed = true
+                                if (t.platform) then 
+                                    platform_exists = true
+                                else
+                                    obstructed = true
                                 break
+                                end
+                            end
+                        end
+                        if (not platform_exists) then
+                            if not (t_c_t.compatible_tiles(tid)[tile_type_map[state.leveldata.TILE_TYPE_ARRAY[x][y]]]) then
+                                obstructed = true
                             end
                         end
                         if (not obstructed) then

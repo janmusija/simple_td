@@ -1,6 +1,7 @@
 local Mana_Orb = require("data/tower/towers/mana_orb")
 local Shooter = require("data/tower/towers/shooter")
 local Brick = require("data/tower/towers/brick")
+local Raft = require("data/tower/towers/raft")
 
 local t_c_t = {}
 
@@ -31,12 +32,14 @@ t_c_t.table = {
     shooter = Shooter,
     mana_orb = Mana_Orb,
     brick = Brick,
+    raft = Raft,
 }
 
 t_c_t.number_table = {
     [1] = "shooter",
     [2] = "mana_orb",
     [3] = "brick",
+    [4] = "raft",
 }
 
 t_c_t.special_slot_sprite_locations = {}
@@ -69,5 +72,16 @@ t_c_t.recharge = function(id)
     end
 end
 
+t_c_t.compatible_tiles = function(id)
+    if (t_c_t.table[id].__typ ~= nil) then
+        if (t_c_t.table[id].compatible_tiles ~= nil) then
+            return t_c_t.table[id].compatible_tiles -- yeah it's the same return but breaking it out to manage cases individualy
+        else
+            return t_c_t.table[id].__typ.compatible_tiles -- default
+        end
+    else
+        return t_c_t.table[id].compatible_tiles
+    end
+end
 
 return t_c_t

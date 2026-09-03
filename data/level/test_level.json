@@ -1,5 +1,5 @@
 {
-  "enemies": {"cube": true, "matryoshka3": true, "hoyryjyra": true},
+  "enemies": {"cube": true, "matryoshka3": true, "hoyryjyra": true, "steamroller": true, "wavepoints_in_a_bottle": true},
   "initial_wavepoints": 3,
   "wavepoint_scaling": 2,
   "waves": 60,
@@ -7,5 +7,6 @@
   "breadth": 6,
   "length": 12,
   "exitmenu": "campaigns",
-  "forceunlocks": {"mana_orb": true}
+  "forceunlocks": {"mana_orb": true},
+  "grid": [".~'_",".~'_"]
 }

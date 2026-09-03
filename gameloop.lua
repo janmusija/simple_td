@@ -4,6 +4,7 @@ local w, h = love.graphics.getDimensions()
 local td_constants = require("data/td_constants")
 
 local menunames = require("data/menu/menunames")
+local tile_type_map = require("data/tile_types")
 
 function updatepause(state)
 
@@ -204,7 +205,28 @@ function drawgaming(state)
     -- display background, tiles
     for j = 1, state.leveldata.breadth do
         for i = 1, state.leveldata.length do
-            if (math.fmod(i+j,2) == 1) then love.graphics.setColor(0.8,0.8,0.8) else love.graphics.setColor(0.6,0.6,0.6) end
+            local tiletype = tile_type_map[state.leveldata.TILE_TYPE_ARRAY[i][j]] or "normal"
+            if (math.fmod(i+j,2) == 1) then
+                if tiletype == "air" then
+                love.graphics.setColor(0.5,0.9,0.9)
+                elseif tiletype == "void" then
+                love.graphics.setColor(0.1,0.1,0.1)
+                elseif tiletype == "water" then
+                love.graphics.setColor(0.3,0.3,0.8)
+                else
+                love.graphics.setColor(0.8,0.8,0.8)
+                end
+            else
+                if tiletype == "air" then
+                love.graphics.setColor(0.3,0.8,0.8)
+                elseif tiletype == "void" then
+                love.graphics.setColor(0,0,0)
+                elseif tiletype == "water" then
+                love.graphics.setColor(0.2,0.2,0.8)
+                else
+                love.graphics.setColor(0.6,0.6,0.6)
+                end
+            end
             love.graphics.rectangle("fill",(-cx + i - 1)*ZOOMED_SCALE_FACTOR, (-cy + j - 1) * ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR,ZOOMED_SCALE_FACTOR)
         end
     end

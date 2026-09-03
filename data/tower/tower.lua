@@ -9,6 +9,7 @@ local Tower = Object:extend()
 .x -> position (smaller number -> closer to where enemies spawn)
 .speed -> tiles traveled per 60 frames.
 .sprite -> image for this tower
+.platform -> if this is a platform you can place on
 
 members of class itself:
 .manacost -> cost
@@ -33,6 +34,7 @@ end
 
 Tower.recharge = 5*60
 Tower.manacost = 0
+Tower.compatible_tiles = {normal = true}
 
 
 function Tower:damage(state,dmg)

@@ -113,6 +113,22 @@ local function initialize_level (state,id)
     state.leveldata.ticks_per_passive_mana = state.leveldata.ticks_per_passive_mana or 15*6
     state.leveldata.time_till_next_passive_mana = state.leveldata.ticks_per_passive_mana
 
+    state.leveldata.TILE_TYPE_ARRAY = {}
+
+    for i = 1, state.leveldata.length do
+        state.leveldata.TILE_TYPE_ARRAY[i] = {}
+        for j = 1, state.leveldata.breadth do
+            if state.leveldata.grid and state.leveldata.grid[j] and #state.leveldata.grid[j] >=i then
+                local tile_type = string.sub(state.leveldata.grid[j],i,i)
+                state.leveldata.TILE_TYPE_ARRAY[i][j] = tile_type
+            else
+                state.leveldata.TILE_TYPE_ARRAY[i][j] = "."
+            end
+        end
+    end
+
+    state.leveldata.grid = nil -- remove this from memory as it is no longer relevant
+
     -- initialize level rng (seeded by game seed, levelid, and player yen)
     local seed = state.playerdata.seed
     seed = bit.bxor(seed,state.playerdata.yen)

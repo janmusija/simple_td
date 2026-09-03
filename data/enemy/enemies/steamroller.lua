@@ -14,7 +14,7 @@ function Steamroller:new(state,y,mods)
 end
 
 Steamroller.weight = 1
-Steamroller.wavepoints = 7
+Steamroller.wavepoints = 8
 Steamroller.sprite = love.graphics.newImage("sprite/enemy/steamroller.png")
 
 return Steamroller
