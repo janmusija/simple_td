@@ -100,7 +100,12 @@ local state = {
 
 local test = 0
 
+local profiler = true
 function love.load() -- when game opens
+    if profiler then
+    love.profiler = require('profile') 
+    love.profiler.start()
+    end
     love.window.setTitle( "Tower defense (could use balancing)" )
     math.randomseed(os.time())
     local seed = math.random(0,16777215)
@@ -135,7 +140,16 @@ local function updatecamera(state)
     end
 end
 
+love.frame = 0
 function love.update(dt)
+    if profiler then
+        love.frame = love.frame + 1
+        if (love.frame % 300==0 ) then 
+            love.report = love.profiler.report(20)
+            love.profiler.reset()
+            print(love.report)
+        end
+    end
     accumulator = math.min(accumulator + dt,spf*2)
     if accumulator >= spf then 
         local s = state[""]

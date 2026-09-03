@@ -12,7 +12,7 @@ local Enemy = Object:extend()
 .attack_dmg -> attack damage
 .attack_recharge -> rate at which attacks are
 
-
+.debuffs -> table of current debuffs and remaining ticks with them
 .block_stall_time -> if blocked, frames before un-blocking.
 .next_attack_ticks -> time until next attack
 
@@ -42,6 +42,7 @@ function Enemy:new(state,y,mods)
     self.attack_dmg = mods.attack_dmg or 4
     self.attack_recharge = mods.attack_recharge or 30
     self.next_attack_ticks = 0
+    self.debuffs = {}
     if (y == -1) then self.alive = false end -- dummy
 end
 
@@ -62,7 +63,7 @@ end
 function Enemy:draw(state)
     -- render it. TK
     if self.sprite then
-        local scale = cam.ZOOM_SF_ENTITY(state.leveldata.camerazoom)
+        local scale = state.leveldata.camerazoom*cam.SF_ENTITY
         local x,y = cam.get_canvas_position(state.leveldata.camerax, state.leveldata.cameray, state.leveldata.camerazoom, self.x, self.y)
         love.graphics.draw(self.sprite, x-1, y, 0, scale, scale)
     else
@@ -71,7 +72,11 @@ function Enemy:draw(state)
 end
 
 function Enemy:moveforward()
-    self.x = self.x + self.speed * (1/60) -- speed is x per 60 frames
+    if self.debuffs.slow then
+        self.x = self.x + self.speed * (1/120) -- speed is x per 60 frames
+    else
+        self.x = self.x + self.speed * (1/60) -- speed is x per 60 frames
+    end
 end
 
 
@@ -101,6 +106,12 @@ function Enemy:update(state)
         end
         if not blocked and self.block_stall_time > 0 then
             self.block_stall_time = self.block_stall_time -1
+        end
+        for k,v in pairs(self.debuffs) do
+            v = v-1
+            if (v <= 0 and v ~= -1) then
+                v = nil
+            end
         end
     end
 end

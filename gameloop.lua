@@ -208,11 +208,12 @@ function updategaming(state)
 end
 
 function drawgaming(state)
-    love.graphics.setColor(1,1,1)
     local cx = state.leveldata.camerax
     local cy = state.leveldata.cameray
     local cz = state.leveldata.camerazoom
-    local ZOOMED_SCALE_FACTOR = cam.ZOOMED_SCALE_FACTOR(cz)
+    local ZOOMED_SCALE_FACTOR = cam.SCALE_FACTOR*cz
+    love.graphics.setColor(state.leveldata.bgcolor or {0,0,0})
+    love.graphics.rectangle("fill",0,0,w,h)
     -- display background, tiles
     for j = 1, state.leveldata.breadth do
         for i = 1, state.leveldata.length do
