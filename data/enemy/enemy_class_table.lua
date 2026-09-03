@@ -4,6 +4,7 @@ local Angry_Cube = require("data/enemy/enemies/angry_cube")
 local Steamroller = require("data/enemy/enemies/steamroller")
 local Swift_Cube = require("data/enemy/enemies/swift_cube")
 local Wavepoint_Bottle = require("data/enemy/enemies/wavepoints_in_a_bottle")
+local Octahedron = require("data/enemy/enemies/octahedron")
 
 local e_c_t = {}
 
@@ -41,6 +42,7 @@ e_c_t.table = {
     swift_cube = Swift_Cube,
     steamroller = Steamroller,
     wavepoints_in_a_bottle = Wavepoint_Bottle,
+    octahedron = Octahedron,
 
     -- duplicates-- which can therefore have alternate modifiers, weights, etc...
     also_cube = Cube,

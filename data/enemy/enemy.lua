@@ -16,6 +16,8 @@ local Enemy = Object:extend()
 .block_stall_time -> if blocked, frames before un-blocking.
 .next_attack_ticks -> time until next attack
 
+.equips: equipment
+
 :new -> create new enemy
 :destroy -> actions to perform when destroyed (e.g. matryoshkas spawn further, smaller matryoshkas)
 :damage -> deal damage to this enemy
@@ -43,6 +45,7 @@ function Enemy:new(state,y,mods)
     self.attack_recharge = mods.attack_recharge or 30
     self.next_attack_ticks = 0
     self.debuffs = {}
+    self.equips = {}
     if (y == -1) then self.alive = false end -- dummy
 end
 
@@ -114,6 +117,12 @@ function Enemy:update(state)
             end
         end
     end
+end
+
+function Enemy:equip(id)
+    local e = nil
+    -- TK
+    table.insert(self.equips, e)
 end
 
 return Enemy
