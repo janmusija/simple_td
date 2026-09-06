@@ -49,6 +49,8 @@ locked.updateLocks = function (state)
     locked.LOCK_BY_LEVEL("tower_brick", "c1w1l2", state)
     locked.LOCK_BY_LEVEL("tool_eraser", "c1w1l3", state)
     locked.LOCK_BY_LEVEL("tower_bishop", "c1w1l4", state)
+    locked.LOCK_BY_LEVEL("tower_snowflake", "c1w1l6", state)
+    locked.PERMALOCK("tower_raft")
 end
 
 

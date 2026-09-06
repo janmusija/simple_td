@@ -249,7 +249,7 @@ function love.keypressed(k)
                     -- currently on selection. add this to slots if unlocked and space exists
                     if #state.leveldata.CHOSEN_TOWERS < state.playerdata.max_slots and -- space exists
                     t_c_t.number_table[tid] ~= nil and -- and there is a thing to select at all
-                    locked.unlocked("tower_" .. t_c_t.number_table[tid]) or (type(state.leveldata.forceunlocks) == "table" and state.leveldata.forceunlocks[t_c_t.number_table[tid]] == true) -- unlocked
+                    locked.unlocked("tower_" .. t_c_t.number_table[tid]) or (type(state.leveldata.forceunlocks) == "table" and (state.leveldata.forceunlocks[t_c_t.number_table[tid]] == true or state.leveldata.forceunlocks.all == true)) -- unlocked
                     then
                         local alreadychosen = false
                         for i = 1, #state.leveldata.CHOSEN_TOWERS do

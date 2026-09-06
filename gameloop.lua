@@ -173,11 +173,15 @@ function updategaming(state)
                         if not e_c_t.compatible_tiles(enid)[state.leveldata.TILE_TYPE_ARRAY[i][j]] then valid = false end
                     end
                     if valid == true then
+                        if (j ~= state.last_spawned_lane) then
+                        table.insert(validlanes,j) -- weight these more highly
+                        end
                         table.insert(validlanes,j)
                     end
                 end
                 if #validlanes > 0 then
                     lane = validlanes[math.random(1,#validlanes)]
+                    state.last_spawned_pane = lane
                     local a = e_c_t.get(enid)(state,lane,e_c_t.mods(enid))
                     
                     table.insert(state.leveldata.ENEMY_ARRAY,a)
@@ -258,7 +262,7 @@ function drawgaming(state)
             love.graphics.rectangle("fill",selection_x,selection_y,w,h)
             love.graphics.setColor(1,1,1)
             for i,v in ipairs(t_c_t.number_table) do
-                if (locked.unlocked("tower_" .. v) or (type(state.leveldata.forceunlocks) == "table" and state.leveldata.forceunlocks[v] == true)) then -- only displpay unlocked towers.
+                if (locked.unlocked("tower_" .. v) or (type(state.leveldata.forceunlocks) == "table" and (state.leveldata.forceunlocks.all == true or state.leveldata.forceunlocks[v] == true))) then -- only displpay unlocked towers.
                     local x = math.fmod((i-1),td_constants.SELECTION_BOX_WIDTH)
                     local y = math.floor((i-1)/td_constants.SELECTION_BOX_WIDTH)
                     love.graphics.draw(t_c_t.slot_sprite(v),selection_x+x*slotwidth,selection_y+y*slotwidth,0,slotwidth/128,slotwidth/128)

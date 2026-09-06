@@ -58,6 +58,14 @@ function Projectile:culling(state) -- cull offscreen projectiles
     end
 end
 
+function Projectile:damage_tower(targ,state)
+    targ:damage(state,self.dmg)
+end
+
+function Projectile:damage_enemy(targ,state)
+    targ:damage(state,self.dmg)
+end
+
 function Projectile:update(state)
     if self.alive then 
         -- check for collision
@@ -67,7 +75,7 @@ function Projectile:update(state)
                 if (math.abs(en.y - self.y) < self.hitboxradius and math.abs(en.x - self.x) < self.hitboxradius) then 
                     -- todo: further logic on whether this projectile can hit this enemy! but that's for when actual content exists.
                     self.alive = false
-                    en:damage(state,self.dmg)
+                    self:damage_enemy(en,state)
                     break
                 end
             end
@@ -75,10 +83,10 @@ function Projectile:update(state)
         if self.alive and self.damagestowers then
             for i = 1, #state.leveldata.TOWER_ARRAY do
                 local t = state.leveldata.TOWER_ARRAY[i]
-                if (math.abs(t.y - self.y) < self.hitboxradius and math.abs(t.x - self.x) < self.hitboxradius) then 
+                if (math.abs(t.y - self.y) < self.hitboxradius and math.abs(t.x - self.x) < self.hitboxradius and not t.platform) then 
                     -- todo: further logic on whether this projectile can hit this tower! but that's for when actual content exists.
                     self.alive = false
-                    t:damage(state,self.dmg)
+                    self:damage_tower(t,state)
                     break
                 end
             end

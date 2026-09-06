@@ -3,6 +3,7 @@ local Shooter = require("data/tower/towers/shooter")
 local Brick = require("data/tower/towers/brick")
 local Raft = require("data/tower/towers/raft")
 local Bishop =require("data/tower/towers/bishop")
+local Snowflake = require("data/tower/towers/snowflake")
 
 local t_c_t = {}
 
@@ -35,6 +36,7 @@ t_c_t.table = {
     brick = Brick,
     raft = Raft,
     bishop = Bishop,
+    snowflake = Snowflake,
 }
 
 t_c_t.number_table = {
@@ -42,7 +44,8 @@ t_c_t.number_table = {
     [2] = "mana_orb",
     [3] = "brick",
     [4] = "bishop",
-    --[?] = "raft",
+    [5] = "snowflake",
+    [6] = "raft",
 }
 
 t_c_t.special_slot_sprite_locations = {}

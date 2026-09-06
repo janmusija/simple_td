@@ -2,6 +2,7 @@ local Bolt = require("data/projectile/projectiles/bolt")
 local Mana_Packet = require("data/projectile/projectiles/mana_packet")
 local Pellet = require("data/projectile/projectiles/pellet")
 local Foe_Bolt = require("data/projectile/projectiles/foe_bolt")
+local Ice_Bolt = require("data/projectile/projectiles/ice_bolt")
 
 local p_c_t = {}
 
@@ -35,6 +36,7 @@ p_c_t.table = {
     pellet = Pellet,
     mana_packet = Mana_Packet,
     foe_bolt = Foe_Bolt,
+    ice_bolt = Ice_Bolt
 }
 
 return p_c_t

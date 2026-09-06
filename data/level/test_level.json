@@ -7,7 +7,7 @@
   "breadth": 6,
   "length": 12,
   "exitmenu": "campaigns",
-  "forceunlocks": {"mana_orb": true},
+  "forceunlocks": {"all": true},
   "grid": [".~'_",".~'_"],
   "initial_wait": 60
 }

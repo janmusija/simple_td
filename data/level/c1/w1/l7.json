@@ -1,15 +1,15 @@
 {
-  "enemies": {"cube": true, "angry_cube": true, "swift_cube": true},
+  "enemies": {"cube": true, "swift_cube": true, "octahedron": true},
   "initial_wavepoints": 2,
   "wavepoint_scaling": 1,
-  "waves": 20,
+  "waves": 15,
   "initial_mana": 40,
   "breadth": 5,
   "grid": [
     ".........",
+    "~~~~.~...",
     ".........",
-    ".........",
-    ".........",
+    "~~~~.~...",
     "........."
   ],
   "exitmenu": "c1world1"
